@@ -1,12 +1,5 @@
-// Learn cc.Class:
-//  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/class.html
-//  - [English] http://docs.cocos2d-x.org/creator/manual/en/scripting/class.html
-// Learn Attribute:
-//  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/reference/attributes.html
-//  - [English] http://docs.cocos2d-x.org/creator/manual/en/scripting/reference/attributes.html
-// Learn life-cycle callbacks:
-//  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
-//  - [English] https://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
+const global = require('./global')
+const levels = require('./levels/level')
 
 const PLAYER = 9
 const SHE = 8
@@ -180,22 +173,7 @@ cc.Class({
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
-        this.init({
-            audio: 0,
-            words: 'day',
-            width: 4,
-            height: 5,
-            exit: cc.v2(2, 2),
-            exitDirection: 'right',
-            map: [
-                0, 0, 0, 0,
-                0, 0, 0, 0,
-                0, 0, 5, 1,
-                9, 1, 1, 1,
-                1, 1, 2, 2
-            ],
-            meSize: 2
-        })
+        this.init(levels.loadLevelData(global.level))
         this.drawBorderAndFill()
         this.addBoxes()
     },
