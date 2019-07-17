@@ -1,12 +1,5 @@
-// Learn cc.Class:
-//  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/class.html
-//  - [English] http://docs.cocos2d-x.org/creator/manual/en/scripting/class.html
-// Learn Attribute:
-//  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/reference/attributes.html
-//  - [English] http://docs.cocos2d-x.org/creator/manual/en/scripting/reference/attributes.html
-// Learn life-cycle callbacks:
-//  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
-//  - [English] https://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
+const global = require('./global')
+const levels = require('./levels/level')
 
 const PLAYER = 9
 const SHE = 8
@@ -59,7 +52,9 @@ cc.Class({
         textureShe: {
             default: null,
             type: cc.Texture2D
-        }
+        },
+
+        duration: 0
     },
 
     drawBorderAndFill () {
@@ -178,11 +173,12 @@ cc.Class({
                         node.width = 2 * this.boxSize + 2 * this.boxPadding
                         break
                     case PLAYER:
-                        node.height = 2 * this.boxSize + 2 * this.boxPadding
-                        node.width = 2 * this.boxSize + 2 * this.boxPadding
+                        node.height = this.meSize * this.boxSize + 2 * this.boxPadding
+                        node.width = this.meSize * this.boxSize + 2 * this.boxPadding
                         const newFrameMe = sprite.spriteFrame.clone()
                         newFrameMe.setTexture(this.textureMe)
                         sprite.spriteFrame = newFrameMe
+                        this.meNode = node
                         break
                     case SHE:
                         node.height = 2 * this.boxSize + 2 * this.boxPadding
@@ -323,29 +319,34 @@ cc.Class({
             }
         }
     },
-    
+
+    checkGameEnd () {
+        if (this.meNode.x === this.exitPosition.x && this.meNode.y === this.exitPosition.y) {
+            global.level++
+            cc.director.preloadScene('game')
+            var move = cc.moveBy(
+                this.duration,
+                cc.v2(this.boxSize * this.meSize + 2 * this.boxPadding + 20, 0)
+            ).easing(cc.easeCubicActionInOut())
+            var fade = cc.fadeOut(this.duration)
+            this.meNode.runAction(move)
+            this.node.runAction(fade)
+
+            // wait for animations to complete
+            setTimeout(function () {
+                cc.director.loadScene('game')
+            }, this.duration * 1000)
+        }
+    },
 
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
-        this.init({
-            audio: 0,
-            words: 'day',
-            width: 4,
-            height: 5,
-            exit: cc.v2(2, 2),
-            exitDirection: 'right',
-            map: [
-                0, 0, 0, 0,
-                0, 0, 0, 0,
-                0, 0, 0, 0,
-                0, 0, 0, 0,
-                0, 0, 2, 2
-            ],
-            meSize: 2
-        })
+        this.init(levels.loadLevelData(global.level))
         this.drawBorderAndFill()
         this.addBoxes()
+
+        cc.log(this.exitPosition, this.meNode.position)
 
         for (const child of this.node.children) {
             //add event of touch_move
@@ -393,7 +394,6 @@ cc.Class({
     },
 
     start () {
-
     },
 
     update (dt) {

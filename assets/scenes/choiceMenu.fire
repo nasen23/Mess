@@ -41,8 +41,8 @@
     },
     "_scale": {
       "__type__": "cc.Vec3",
-      "x": 1,
-      "y": 1,
+      "x": 0.32943684809104534,
+      "y": 0.32943684809104534,
       "z": 1
     },
     "_quat": {
@@ -513,8 +513,10 @@
     "_fontSize": 20,
     "_lineHeight": 40,
     "_enableWrapText": false,
-    "_N$file": null,
-    "_isSystemFontUsed": true,
+    "_N$file": {
+      "__uuid__": "83616428-2abb-436a-994c-15481a3ca0a0"
+    },
+    "_isSystemFontUsed": false,
     "_spacingX": 0,
     "_batchAsBitmap": false,
     "_N$horizontalAlign": 1,
@@ -681,6 +683,7 @@
       "__id__": 7
     },
     "_enabled": true,
+    "toLevel": 0,
     "_id": "faMBt18CtNCYALLSAdx+nU"
   },
   {
@@ -891,8 +894,10 @@
     "_fontSize": 20,
     "_lineHeight": 40,
     "_enableWrapText": false,
-    "_N$file": null,
-    "_isSystemFontUsed": true,
+    "_N$file": {
+      "__uuid__": "83616428-2abb-436a-994c-15481a3ca0a0"
+    },
+    "_isSystemFontUsed": false,
     "_spacingX": 0,
     "_batchAsBitmap": false,
     "_N$horizontalAlign": 1,
@@ -1059,6 +1064,7 @@
       "__id__": 16
     },
     "_enabled": true,
+    "toLevel": 1,
     "_id": "9e+nHajZ1E/r6rSJ739ZXo"
   },
   {
@@ -1269,8 +1275,10 @@
     "_fontSize": 20,
     "_lineHeight": 40,
     "_enableWrapText": false,
-    "_N$file": null,
-    "_isSystemFontUsed": true,
+    "_N$file": {
+      "__uuid__": "83616428-2abb-436a-994c-15481a3ca0a0"
+    },
+    "_isSystemFontUsed": false,
     "_spacingX": 0,
     "_batchAsBitmap": false,
     "_N$horizontalAlign": 1,
@@ -1437,6 +1445,7 @@
       "__id__": 25
     },
     "_enabled": true,
+    "toLevel": 0,
     "_id": "6d5f+4rgxFeYX8cYr6wksx"
   },
   {
@@ -1647,8 +1656,10 @@
     "_fontSize": 20,
     "_lineHeight": 40,
     "_enableWrapText": false,
-    "_N$file": null,
-    "_isSystemFontUsed": true,
+    "_N$file": {
+      "__uuid__": "83616428-2abb-436a-994c-15481a3ca0a0"
+    },
+    "_isSystemFontUsed": false,
     "_spacingX": 0,
     "_batchAsBitmap": false,
     "_N$horizontalAlign": 1,
@@ -1815,6 +1826,7 @@
       "__id__": 34
     },
     "_enabled": true,
+    "toLevel": 0,
     "_id": "21u2DPtghLrLHpQ7RYpnpk"
   },
   {

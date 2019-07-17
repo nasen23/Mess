@@ -21,12 +21,12 @@ cc.Class({
 
     // LIFE-CYCLE CALLBACKS:
 
-    onLoad : function() {
-        //获取本节点上的Animation组件
+    onLoad: function () {
+        // 获取本节点上的Animation组件
         var animationComponent = this.getComponent(cc.Animation)
-        //执行play操作
+        // 执行play操作
         var state = animationComponent.play('logo')
-        state.repeatCount = Infinity;
-    },
+        state.repeatCount = Infinity
+    }
     // update (dt) {},
-});
+})
