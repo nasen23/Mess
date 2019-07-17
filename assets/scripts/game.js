@@ -298,7 +298,7 @@ cc.Class({
     },
 
     updateChildrenStillPosition(child) {
-        child.x = this.initx + 
+        child.x = this.initx +
                   Math.floor((Math.floor((child.x - this.initx) / (this.boxSizeWithPadding / 2)) + 1) / 2) * this.boxSizeWithPadding
         child.y = this.inity + 
                   Math.floor((Math.floor((child.y - this.inity) / (this.boxSizeWithPadding / 2)) + 1) / 2) * this.boxSizeWithPadding
