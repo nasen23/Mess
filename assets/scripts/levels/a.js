@@ -4,14 +4,14 @@ function levelData () {
         words: 'day',
         width: 4,
         height: 5,
-        exit: cc.v2(2, 2),
+        exit: cc.v2(2, 3),
         exitDirection: 'right',
         map: [
             0, 0, 0, 0,
             0, 0, 0, 0,
-            0, 0, 5, 1,
-            9, 1, 1, 1,
-            1, 1, 2, 2
+            0, 0, 0, 0,
+            0, 0, 9, 1,
+            0, 0, 1, 1
         ],
         meSize: 2
     }

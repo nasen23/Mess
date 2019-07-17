@@ -47,7 +47,9 @@ cc.Class({
         textureShe: {
             default: null,
             type: cc.Texture2D
-        }
+        },
+
+        duration: 0
     },
 
     drawBorderAndFill () {
@@ -146,11 +148,12 @@ cc.Class({
                         node.width = 2 * this.boxSize + 2 * this.boxPadding
                         break
                     case PLAYER:
-                        node.height = 2 * this.boxSize + 2 * this.boxPadding
-                        node.width = 2 * this.boxSize + 2 * this.boxPadding
+                        node.height = this.meSize * this.boxSize + 2 * this.boxPadding
+                        node.width = this.meSize * this.boxSize + 2 * this.boxPadding
                         const newFrameMe = sprite.spriteFrame.clone()
                         newFrameMe.setTexture(this.textureMe)
                         sprite.spriteFrame = newFrameMe
+                        this.meNode = node
                         break
                     case SHE:
                         node.height = 2 * this.boxSize + 2 * this.boxPadding
@@ -170,17 +173,38 @@ cc.Class({
         }
     },
 
+    checkGameEnd () {
+        if (this.meNode.x === this.exitPosition.x && this.meNode.y === this.exitPosition.y) {
+            global.level++
+            cc.director.preloadScene('game')
+            var move = cc.moveBy(
+                this.duration,
+                cc.v2(this.boxSize * this.meSize + 2 * this.boxPadding + 20, 0)
+            ).easing(cc.easeCubicActionInOut())
+            var fade = cc.fadeOut(this.duration)
+            this.meNode.runAction(move)
+            this.node.runAction(fade)
+
+            // wait for animations to complete
+            setTimeout(function () {
+                cc.director.loadScene('game')
+            }, this.duration * 1000)
+        }
+    },
+
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
         this.init(levels.loadLevelData(global.level))
         this.drawBorderAndFill()
         this.addBoxes()
+
+        cc.log(this.exitPosition, this.meNode.position)
     },
 
     start () {
-
+        this.checkGameEnd()
     }
 
-    // update (dt) {},
+    // update (dt) { }
 })
