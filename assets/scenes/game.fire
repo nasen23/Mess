@@ -427,7 +427,7 @@
       "__id__": 7
     },
     "_enabled": true,
-    "borderWidth": 20,
+    "borderWidth": 15,
     "fillColor": {
       "__type__": "cc.Color",
       "r": 0,
@@ -442,17 +442,24 @@
       "b": 255,
       "a": 255
     },
-    "boxPadding": 10,
+    "boxPadding": 5,
     "boxPrefab": {
       "__uuid__": "bfa848a4-ebcb-4401-aa6d-6898054fa79a"
     },
     "textureMe": {
       "__uuid__": "1fc6e10e-14bd-4bec-912c-b521c79c166c"
     },
+    "textureOld": {
+      "__uuid__": "5fb8fa22-a77b-45a2-9110-3160207ba285"
+    },
+    "textureBaby": {
+      "__uuid__": "fc5c5aea-af4f-462a-8d0d-b16b9849b833"
+    },
     "textureShe": {
       "__uuid__": "1af849f4-263b-44ba-a978-304d88c79874"
     },
     "duration": 2,
+    "droppingSpeed": 25,
     "_id": "7av0B3DMNAyrL7FAtzFAYn"
   },
   {

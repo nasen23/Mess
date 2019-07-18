@@ -1,16 +1,10 @@
-const a = require('./a')
-const b = require('./b')
-
+const levelInfo = require('./levelInfo')
 const global = require('../global')
 
 const MAX_LEVEL = 1
 
 function loadLevelData (levelNum) {
-    switch (levelNum) {
-    case 0: return a.levelData()
-    case 1: return b.levelData()
-    default: break
-    }
+    return levelInfo.levels[levelNum]
 }
 
 function nextLevel () {

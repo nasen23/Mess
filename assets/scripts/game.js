@@ -2,6 +2,8 @@ const global = require('./global')
 const levels = require('./levels/level')
 
 const PLAYER = 9
+const PLAYER_BABY = 10
+const PLAYER_OLD = 11
 const SHE = 8
 const EMPTY = 0
 const OCCUPIED = 1
@@ -9,8 +11,10 @@ const BOX_1 = 2
 const BOX_2_H = 3
 const BOX_2_V = 4
 const BOX_4 = 5
+const BOX_3_H = 6
+const BOX_3_V = 7
 
-const SPEED = 8 //手指松开后方块下落速度
+const SPEED = 12 // 手指松开后方块下落速度
 
 var WIDTH = 0
 var HEIGHT = 0
@@ -49,12 +53,21 @@ cc.Class({
             default: null,
             type: cc.Texture2D
         },
+        textureOld: {
+            default: null,
+            type: cc.Texture2D
+        },
+        textureBaby: {
+            default: null,
+            type: cc.Texture2D
+        },
         textureShe: {
             default: null,
             type: cc.Texture2D
         },
 
-        duration: 0
+        duration: 0,
+        droppingSpeed: 0
     },
 
     drawBorderAndFill () {
@@ -94,13 +107,13 @@ cc.Class({
         // calculating node width
         this.node.width = this.width * this.boxSizeWithPadding + 2 * this.borderWidth
 
-        //the position of the first cell in panel
+        // the position of the first cell in panel
         this.initx = this.borderWidth + this.boxPadding
         this.inity = this.initx + this.boxSize
 
-        //the position of the final cell in panel
-        //this.endx = this.node.width - this.inity
-        //this.endy = this.node.height - this.initx
+        // the position of the final cell in panel
+        // this.endx = this.node.width - this.inity
+        // this.endy = this.node.height - this.initx
 
         this.audio = levelData.audio
         this.words = levelData.words
@@ -140,6 +153,8 @@ cc.Class({
                 case BOX_2_H:
                 case BOX_2_V:
                 case BOX_4:
+                case BOX_3_H:
+                case BOX_3_V:
                     // (x, y) of box in panel (left top cornor of the actual box)
                     const x = this.borderWidth + col * this.boxSizeWithPadding + this.boxPadding
                     let y = this.borderWidth + row * this.boxSizeWithPadding + this.boxPadding
@@ -151,14 +166,14 @@ cc.Class({
                     node.color = this.boxColor
                     const sprite = node.getComponent(cc.Sprite)
 
-                    //if item can go to
+                    // if item can go to
                     node.left = false
                     node.right = false
                     node.up = false
                     node.down = false
 
-                    node.holding = false //holding or not
-                    node.droping = false //droping or not
+                    node.holding = false // holding or not
+                    node.droping = false // droping or not
 
                     switch (state) {
                     case BOX_1: break
@@ -172,12 +187,32 @@ cc.Class({
                         node.height = 2 * this.boxSize + 2 * this.boxPadding
                         node.width = 2 * this.boxSize + 2 * this.boxPadding
                         break
+                    case BOX_3_H:
+                        node.width = 3 * this.boxSize
+                        break
+                    case BOX_3_V:
+                        node.height = 3 * this.boxSize
+                        break
                     case PLAYER:
                         node.height = this.meSize * this.boxSize + 2 * this.boxPadding
                         node.width = this.meSize * this.boxSize + 2 * this.boxPadding
                         const newFrameMe = sprite.spriteFrame.clone()
                         newFrameMe.setTexture(this.textureMe)
                         sprite.spriteFrame = newFrameMe
+                        this.meNode = node
+                        break
+                    case PLAYER_OLD:
+                        node.height = this.meSize * this.boxSize + 2 * this.boxPadding
+                        node.width = this.meSize * this.boxSize + 2 * this.boxPadding
+                        const newFrameOld = sprite.spriteFrame.clone()
+                        newFrameOld.setTexture(this.textureOld)
+                        sprite.spriteFrame = newFrameOld
+                        this.meNode = node
+                        break
+                    case PLAYER_BABY:
+                        const newFrameBaby = sprite.spriteFrame.clone()
+                        newFrameBaby.setTexture(this.textureBaby)
+                        sprite.spriteFrame = newFrameBaby
                         this.meNode = node
                         break
                     case SHE:
@@ -198,123 +233,120 @@ cc.Class({
         }
     },
 
-    updateChildrenState(child) {
-        //judge if it can go to
+    updateChildrenState (child) {
+        // judge if it can go to
         child.left = child.right = child.up = child.down = true
 
-        //between other bricks
-        for(const item of this.node.children) {
-            if(child !== item) {
-                //update states
-                if(child.x + child.width + this.boxPadding * 2 >= item.x  - this.boxPadding / 2 &&
+        // between other bricks
+        for (const item of this.node.children) {
+            if (child !== item) {
+                // update states
+                if (child.x + child.width + this.boxPadding * 2 >= item.x - this.boxPadding / 2 &&
                     child.x + child.width + this.boxPadding * 2 <= item.x + this.boxPadding / 2 &&
                     child.y >= item.y - item.height && child.y <= item.y + child.height) {
-                    //brick right
+                    // brick right
                     child.right = false
                 }
-                if(child.x - this.boxPadding * 2 - item.width <= item.x + this.boxPadding / 2 &&
+                if (child.x - this.boxPadding * 2 - item.width <= item.x + this.boxPadding / 2 &&
                     child.x - this.boxPadding * 2 - item.width >= item.x - this.boxPadding / 2 &&
                     child.y >= item.y - item.height && child.y <= item.y + child.height) {
-                    //brick left
+                    // brick left
                     child.left = false
                 }
-                if(child.y - this.boxPadding * 2 - child.width <= item.y + this.boxPadding / 2 &&
+                if (child.y - this.boxPadding * 2 - child.width <= item.y + this.boxPadding / 2 &&
                     child.y - this.boxPadding * 2 - child.width >= item.y - this.boxPadding / 2 &&
                     child.x >= item.x - child.width && child.x <= item.x + item.width) {
-                    //brick down
+                    // brick down
                     child.down = false
                 }
-                if(child.y + this.boxPadding * 2 + item.width >= item.y - this.boxPadding / 2 &&
+                if (child.y + this.boxPadding * 2 + item.width >= item.y - this.boxPadding / 2 &&
                     child.y + this.boxPadding * 2 + item.width <= item.y + this.boxPadding / 2 &&
                     child.x >= item.x - child.width && child.x <= item.x + item.width) {
-                    //brick up
+                    // brick up
                     child.up = false
                 }
 
-                //when in other bricks
-                if(child.x + child.width + this.boxPadding * 2 >= item.x &&
+                // when in other bricks
+                if (child.x + child.width + this.boxPadding * 2 >= item.x &&
                     child.x + child.width + this.boxPadding * 2 <= item.x + this.boxSize / 2 &&
                     child.y >= item.y - item.height && child.y <= item.y + child.height) {
-                        child.x = item.x - child.width - this.boxPadding * 2
-                        child.right = false
-                    }
-                if(child.x - this.boxPadding * 2 >= item.x + item.width - this.boxSize / 2 &&
+                    child.x = item.x - child.width - this.boxPadding * 2
+                    child.right = false
+                }
+                if (child.x - this.boxPadding * 2 >= item.x + item.width - this.boxSize / 2 &&
                     child.x - this.boxPadding * 2 <= item.x + item.width &&
                     child.y >= item.y - item.height && child.y <= item.y + child.height) {
-                        child.x = item.x + item.width + this.boxPadding * 2
-                        child.left = false
-                    }
-                if(child.y - this.boxPadding * 2 - child.width <= item.y &&
+                    child.x = item.x + item.width + this.boxPadding * 2
+                    child.left = false
+                }
+                if (child.y - this.boxPadding * 2 - child.width <= item.y &&
                     child.y - this.boxPadding * 2 - child.width >= item.y - this.boxSize / 2 &&
                     child.x >= item.x - child.width && child.x <= item.x + item.width) {
-                        child.y = item.y + this.boxPadding * 2 + child.height
-                        child.down = false
+                    child.y = item.y + this.boxPadding * 2 + child.height
+                    child.down = false
                 }
-                if(child.y + this.boxPadding * 2 >= item.y - item.height &&
+                if (child.y + this.boxPadding * 2 >= item.y - item.height &&
                     child.y + this.boxPadding * 2 <= item.y - item.height + this.boxSize / 2 &&
                     child.x >= item.x - child.width && child.x <= item.x + item.width) {
-                        child.y = item.y - item.height - this.boxPadding * 2
-                        child.up = false
+                    child.y = item.y - item.height - this.boxPadding * 2
+                    child.up = false
                 }
-                
             }
         }
-        //between panel
-        if(child.x - this.boxPadding - this.borderWidth <= 0) {
-            //wall left
+        // between panel
+        if (child.x - this.boxPadding - this.borderWidth <= 0) {
+            // wall left
             child.left = false
         }
-        if(child.x + this.boxPadding + child.width + this.borderWidth >= this.node.width) {
-            //wall right
+        if (child.x + this.boxPadding + child.width + this.borderWidth >= this.node.width) {
+            // wall right
             child.right = false
         }
-        if(child.y - this.boxPadding - child.width - this.borderWidth <= 0) {
-            //wall down
+        if (child.y - this.boxPadding - child.width - this.borderWidth <= 0) {
+            // wall down
             child.down = false
         }
-        if(child.y + this.boxPadding + this.borderWidth >= this.node.height) {
-            //wall up
+        if (child.y + this.boxPadding + this.borderWidth >= this.node.height) {
+            // wall up
             child.up = false
         }
 
-        //when out of panel
-        if(child.x - this.boxPadding - this.borderWidth < 0) {
+        // when out of panel
+        if (child.x - this.boxPadding - this.borderWidth < 0) {
             child.x = this.borderWidth + this.boxPadding
             child.left = false
-        }
-        else if(child.x + child.width + this.boxPadding + this.borderWidth > this.node.width) {
+        } else if (child.x + child.width + this.boxPadding + this.borderWidth > this.node.width) {
             child.x = this.node.width - this.borderWidth - this.boxPadding - child.width
             child.right = false
         }
-        
-        if(child.y - this.boxPadding - this.borderWidth - child.height < 0) {
+
+        if (child.y - this.boxPadding - this.borderWidth - child.height < 0) {
             child.y = this.borderWidth + this.boxPadding + child.height
             child.down = false
-        }
-        else if(child.y + this.boxPadding + this.borderWidth > this.node.height) {
+        } else if (child.y + this.boxPadding + this.borderWidth > this.node.height) {
             child.y = this.node.height - this.borderWidth - this.boxPadding
             child.up = false
         }
     },
 
-    updateChildrenStillPosition(child) {
+    updateChildrenStillPosition (child) {
         child.x = this.initx +
                   Math.floor((Math.floor((child.x - this.initx) / (this.boxSizeWithPadding / 2)) + 1) / 2) * this.boxSizeWithPadding
-        child.y = this.inity + 
+        child.y = this.inity +
                   Math.floor((Math.floor((child.y - this.inity) / (this.boxSizeWithPadding / 2)) + 1) / 2) * this.boxSizeWithPadding
     },
 
-    updateChildrenMovingPosition(child) {
+    updateChildrenMovingPosition (child) {
         var dirx = child.x - this.initx
         var diry = child.y - this.inity
         var rx = dirx % this.boxSizeWithPadding
         var ry = diry % this.boxSizeWithPadding
-        if((rx > this.boxSizeWithPadding / 3 || rx < this.boxSizeWithPadding * 2 / 3) ||
+        if ((rx > this.boxSizeWithPadding / 3 || rx < this.boxSizeWithPadding * 2 / 3) ||
             ry > this.boxSizeWithPadding / 3 || ry < this.boxSizeWithPadding * 2 / 3) {
-            if(rx <= 20 || rx >= this.boxSizeWithPadding - 20) {
+            if (rx <= 20 || rx >= this.boxSizeWithPadding - 20) {
                 child.x = this.initx + Math.round(dirx / this.boxSizeWithPadding) * this.boxSizeWithPadding
             }
-            if(ry <= 20 || ry >= this.boxSizeWithPadding - 20) {
+            if (ry <= 20 || ry >= this.boxSizeWithPadding - 20) {
                 child.y = this.inity + Math.round(diry / this.boxSizeWithPadding) * this.boxSizeWithPadding
             }
         }
@@ -322,8 +354,8 @@ cc.Class({
 
     checkGameEnd () {
         if (this.meNode.x === this.exitPosition.x && this.meNode.y === this.exitPosition.y) {
+            this.checkComplete = true
             global.level++
-            cc.director.preloadScene('game')
             var move = cc.moveBy(
                 this.duration,
                 cc.v2(this.boxSize * this.meSize + 2 * this.boxPadding + 20, 0)
@@ -333,15 +365,12 @@ cc.Class({
             this.node.runAction(fade)
 
             // wait for animations to complete
-            setTimeout(function () {
-                cc.director.loadScene('game')
-            }, this.duration * 1000)
+            cc.director.loadScene('game')
+            cc.log('try to go to next scene')
         }
     },
 
-    // LIFE-CYCLE CALLBACKS:
-
-    onLoad () {
+    reload () {
         this.init(levels.loadLevelData(global.level))
         this.drawBorderAndFill()
         this.addBoxes()
@@ -349,70 +378,70 @@ cc.Class({
         cc.log(this.exitPosition, this.meNode.position)
 
         for (const child of this.node.children) {
-            //add event of touch_move
-            child.on(cc.Node.EventType.TOUCH_MOVE, function(event) {
+            // add event of touch_move
+            child.on(cc.Node.EventType.TOUCH_MOVE, function (event) {
                 child.holding = true
                 var delta = event.touch.getDelta()
-                if((delta.x > 0 && child.right) || (delta.x < 0 && child.left)) {
-                    if(child.x + delta.x - this.boxPadding - this.borderWidth <= 0) {
+                if ((delta.x > 0 && child.right) || (delta.x < 0 && child.left)) {
+                    if (child.x + delta.x - this.boxPadding - this.borderWidth <= 0) {
                         child.x = this.initx
                         child.left = false
-                       }
-                    else if(child.x + delta.x + child.width + this.boxPadding + this.borderWidth >= WIDTH) {
+                    } else if (child.x + delta.x + child.width + this.boxPadding + this.borderWidth >= WIDTH) {
                         child.x = this.endx - this.boxSize + child.width
                         child.right = false
-                       }
-                    else {
-                         child.x += delta.x
-                       }
+                    } else {
+                        child.x += delta.x
+                    }
                 }
-                if((delta.y > 0 && child.up) || (delta.y < 0 && child.down)) {
-                    if(child.y + delta.y - this.boxPadding - this.borderWidth <= 0) {
+                if ((delta.y > 0 && child.up) || (delta.y < 0 && child.down)) {
+                    if (child.y + delta.y - this.boxPadding - this.borderWidth <= 0) {
                         child.y = this.inity - this.boxSize + child.height
                         child.down = false
-                    }
-                    else if(child.y + delta.y + this.boxPadding + this.borderWidth >= HEIGHT) {
+                    } else if (child.y + delta.y + this.boxPadding + this.borderWidth >= HEIGHT) {
                         child.y = this.endy
                         child.up = false
-                    }
-                    else {
+                    } else {
                         child.y += delta.y
                     }
                 }
             }, this.node)
 
-            //add event of touch_cancel
-            child.on(cc.Node.EventType.TOUCH_CANCEL, function(event) {
+            // add event of touch_cancel
+            child.on(cc.Node.EventType.TOUCH_CANCEL, function (event) {
                 child.holding = false
             }, this.node)
 
-            //add event of touch_end
-            child.on(cc.Node.EventType.TOUCH_END, function(event) {
+            // add event of touch_end
+            child.on(cc.Node.EventType.TOUCH_END, function (event) {
                 child.holding = false
             }, this.node)
         }
+    },
+
+    // LIFE-CYCLE CALLBACKS:
+
+    onLoad () {
+        this.reload()
     },
 
     start () {
     },
 
     update (dt) {
-        for(const child of this.node.children) {
+        for (const child of this.node.children) {
             this.updateChildrenState(child)
 
-            child.droping = false
+            child.dropping = false
 
-            if(child.holding) {
-                //this.updateChildrenMovingPosition(child)
-            }
-
-            else if (child.down) {
-                child.droping = true
-                child.y -= SPEED
-            }
-            else {
+            if (child.holding) {
+                // this.updateChildrenMovingPosition(child)
+            } else if (child.down) {
+                child.dropping = true
+                child.y -= this.droppingSpeed
+            } else {
                 this.updateChildrenStillPosition(child)
             }
         }
-    },
+        if (!this.checkComplete) this.checkGameEnd()
+    }
 })
