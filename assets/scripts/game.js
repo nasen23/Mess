@@ -233,7 +233,7 @@ cc.Class({
         }
     },
 
-    /*updateChildrenState (child) {
+    /* updateChildrenState (child) {
         // judge if it can go to
         child.left = child.right = child.up = child.down = true
 
@@ -353,124 +353,124 @@ cc.Class({
     },
     */
 
-   handleTouch () {
-    switch (this.touchTarget) {
-    case undefined:
-    case null:
-    {
-        const newTouchPoint = this.touchPos
-        const pos = this.node.convertToNodeSpace(newTouchPoint)
-        for (const child of this.node.children) {
-            if (child.markType === SHE) continue
-            if (this.positionInNode(child, pos)) {
-                this.touchTarget = child
-                this.latestTouchPoint = newTouchPoint
-                this.ignoreGrids = true
-                this.removeMarkOnMap(child)
-                break
-            }
-        }
-        break
-    }
-    default:
-        this.moveNode()
-
-        break
-    }
-},
-
-cancelTouch () {
-    if (this.touchTarget) {
-        const node = this.touchTarget
-        this.touchTarget = null
-        const grid = this.nearestGrid(node.position.x, node.position.y)
-        node.logicPos.x = this.colToX(grid.x)
-        node.logicPos.y = this.rowToY(grid.y)
-        node.position = node.logicPos
-        node.row = grid.y
-        node.col = grid.x
-        this.markOnMap(node)
-        this.checkGravityMoves()
-    }
-},
-
-moveNode () {
-    const newTouchPoint = this.touchPos
-    const delta = newTouchPoint.sub(this.latestTouchPoint)
-    this.latestTouchPoint = newTouchPoint
-
-    // try to find legal place to move
-    const oldPos = this.touchTarget.logicPos
-    const legalPos = this.normalizedPos(this.touchTarget, delta, oldPos)
-    if (legalPos.x < 0) {
-        cc.log(legalPos)
-    }
-    const gridState = this.matchGrid(legalPos, this.attract_dist)
-    this.touchTarget.x = gridState[0]
-    this.touchTarget.y = gridState[1]
-    this.touchTarget.logicPos = legalPos
-
-    // check for gravity moves
-    if (gridState[2]) {
-        if (!this.ignoreGrids) {
-            const grid = this.nearestGrid(legalPos.x, legalPos.y)
-            this.touchTarget.col = grid.x
-            this.touchTarget.row = grid.y
-            this.markOnMap(this.touchTarget)
-            this.checkGravityMoves()
-            this.removeMarkOnMap(this.touchTarget)
-        }
-        this.ignoreGrids = true
-    } else {
-        this.ignoreGrids = false
-    }
-},
-
-checkGravityMoves () {
-    let loop = true
-    while (loop) {
-        loop = false
-        for (const node of this.node.children) {
-            if (node.markType === SHE || node === this.touchTarget) continue
-            let hasSpace = false
-
-            let r = node.row + node.size.y
-            if (r < this.height) {
-                hasSpace = true
-                for (let c = node.col; c < node.col + node.size.x; c++) {
-                    if (this.map[r * this.width + c] > 0) {
-                        hasSpace = false
-                        break
-                    }
+    handleTouch () {
+        switch (this.touchTarget) {
+        case undefined:
+        case null:
+        {
+            const newTouchPoint = this.touchPos
+            const pos = this.node.convertToNodeSpace(newTouchPoint)
+            for (const child of this.node.children) {
+                if (child.markType === SHE) continue
+                if (this.positionInNode(child, pos)) {
+                    this.touchTarget = child
+                    this.latestTouchPoint = newTouchPoint
+                    this.ignoreGrids = true
+                    this.removeMarkOnMap(child)
+                    break
                 }
             }
+            break
+        }
+        default:
+            this.moveNode()
 
-            if (hasSpace) {
-                this.removeMarkOnMap(node)
-                r = node.row
-                node.row = r + 1
-                node.rowDrop += 1
-                const y = this.rowToY(node.row)
-                node.logicPos.y = y
-                node.logicPos.x = node.x
-                node.needGravityAnimation = true
-                this.markOnMap(node)
-                loop = true
+            break
+        }
+    },
+
+    cancelTouch () {
+        if (this.touchTarget) {
+            const node = this.touchTarget
+            this.touchTarget = null
+            const grid = this.nearestGrid(node.position.x, node.position.y)
+            node.logicPos.x = this.colToX(grid.x)
+            node.logicPos.y = this.rowToY(grid.y)
+            node.position = node.logicPos
+            node.row = grid.y
+            node.col = grid.x
+            this.markOnMap(node)
+            this.checkGravityMoves()
+        }
+    },
+
+    moveNode () {
+        const newTouchPoint = this.touchPos
+        const delta = newTouchPoint.sub(this.latestTouchPoint)
+        this.latestTouchPoint = newTouchPoint
+
+        // try to find legal place to move
+        const oldPos = this.touchTarget.logicPos
+        const legalPos = this.normalizedPos(this.touchTarget, delta, oldPos)
+        if (legalPos.x < 0) {
+            cc.log(legalPos)
+        }
+        const gridState = this.matchGrid(legalPos, this.attract_dist)
+        this.touchTarget.x = gridState[0]
+        this.touchTarget.y = gridState[1]
+        this.touchTarget.logicPos = legalPos
+
+        // check for gravity moves
+        if (gridState[2]) {
+            if (!this.ignoreGrids) {
+                const grid = this.nearestGrid(legalPos.x, legalPos.y)
+                this.touchTarget.col = grid.x
+                this.touchTarget.row = grid.y
+                this.markOnMap(this.touchTarget)
+                this.checkGravityMoves()
+                this.removeMarkOnMap(this.touchTarget)
+            }
+            this.ignoreGrids = true
+        } else {
+            this.ignoreGrids = false
+        }
+    },
+
+    checkGravityMoves () {
+        let loop = true
+        while (loop) {
+            loop = false
+            for (const node of this.node.children) {
+                if (node.markType === SHE || node === this.touchTarget) continue
+                let hasSpace = false
+
+                let r = node.row + node.size.y
+                if (r < this.height) {
+                    hasSpace = true
+                    for (let c = node.col; c < node.col + node.size.x; c++) {
+                        if (this.map[r * this.width + c] > 0) {
+                            hasSpace = false
+                            break
+                        }
+                    }
+                }
+
+                if (hasSpace) {
+                    this.removeMarkOnMap(node)
+                    r = node.row
+                    node.row = r + 1
+                    node.rowDrop += 1
+                    const y = this.rowToY(node.row)
+                    node.logicPos.y = y
+                    node.logicPos.x = node.x
+                    node.needGravityAnimation = true
+                    this.markOnMap(node)
+                    loop = true
+                }
             }
         }
-    }
 
-    // for (const node of this.node.children) {
-    //     if (node.needGravityAnimation) {
-    //         cc.log(node.markType, node.rowDrop)
-    //         node.runAction(cc.moveTo(0.1 * node.rowDrop, node.logicPos))
-    //         node.needGravityAnimation = false
-    //         node.rowDrop = 0
-    //     }
-    // }
+        // for (const node of this.node.children) {
+        //     if (node.needGravityAnimation) {
+        //         cc.log(node.markType, node.rowDrop)
+        //         node.runAction(cc.moveTo(0.1 * node.rowDrop, node.logicPos))
+        //         node.needGravityAnimation = false
+        //         node.rowDrop = 0
+        //     }
+        // }
 
     // this.generateAnimation(node)
-},
+    },
 
     checkGameEnd () {
         if (this.meNode.x === this.exitPosition.x && this.meNode.y === this.exitPosition.y) {
@@ -502,10 +502,9 @@ checkGravityMoves () {
                 child.holding = true
                 var delta = event.touch.getDelta()
                 if (child.state === SHE) {
-                    //SHE donn't move
-                }
-                else if (child.state === PLAYER_OLD) {
-                    //OLD only moves to left and right
+                    // SHE donn't move
+                } else if (child.state === PLAYER_OLD) {
+                    // OLD only moves to left and right
                     if ((delta.x > 0 && child.right) || (delta.x < 0 && child.left)) {
                         if (child.x + delta.x - this.boxPadding - this.borderWidth <= 0) {
                             child.x = this.initx
@@ -517,8 +516,7 @@ checkGravityMoves () {
                             child.x += delta.x
                         }
                     }
-                }
-                else {
+                } else {
                     if ((delta.x > 0 && child.right) || (delta.x < 0 && child.left)) {
                         if (child.x + delta.x - this.boxPadding - this.borderWidth <= 0) {
                             child.x = this.initx
