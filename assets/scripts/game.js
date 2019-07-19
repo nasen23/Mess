@@ -14,11 +14,6 @@ const BOX_4 = 5
 const BOX_3_H = 6
 const BOX_3_V = 7
 
-const SPEED = 12 // 手指松开后方块下落速度
-
-var WIDTH = 0
-var HEIGHT = 0
-
 cc.Class({
     extends: cc.Component,
 
@@ -67,7 +62,8 @@ cc.Class({
         },
 
         duration: 0,
-        droppingSpeed: 0
+        droppingSpeed: 0,
+        attract_dist: 0
     },
 
     drawBorderAndFill () {
@@ -136,10 +132,6 @@ cc.Class({
         } else {
             cc.error('unknown exit direction')
         }
-
-        cc.log(this.exitPosition)
-        WIDTH = this.node.width
-        HEIGHT = this.node.height
     },
 
     addBoxes () {
@@ -165,65 +157,66 @@ cc.Class({
                     node.width = node.height = this.boxSize
                     node.color = this.boxColor
                     const sprite = node.getComponent(cc.Sprite)
+                    node.markType = state
 
-                    // if item can go to
-                    node.left = false
-                    node.right = false
-                    node.up = false
-                    node.down = false
-
-                    node.holding = false // holding or not
-                    node.droping = false // droping or not
+                    // keep tracking of row and col of node
+                    node.row = row
+                    node.col = col
+                    node.size = cc.v2(1, 1)
+                    node.logicPos = node.position
+                    node.rowDrop = 0
 
                     switch (state) {
                     case BOX_1: break
                     case BOX_2_H:
-                        node.width = 2 * this.boxSize + 2 * this.boxPadding
+                        node.size.x = 2
                         break
                     case BOX_2_V:
-                        node.height = 2 * this.boxSize + 2 * this.boxPadding
+                        node.size.y = 2
                         break
                     case BOX_4:
-                        node.height = 2 * this.boxSize + 2 * this.boxPadding
-                        node.width = 2 * this.boxSize + 2 * this.boxPadding
+                        node.size.x = node.size.y = 2
                         break
                     case BOX_3_H:
-                        node.width = 3 * this.boxSize
+                        node.size.x = 3
                         break
                     case BOX_3_V:
-                        node.height = 3 * this.boxSize
+                        node.size.y = 3
                         break
                     case PLAYER:
-                        node.height = this.meSize * this.boxSize + 2 * this.boxPadding
-                        node.width = this.meSize * this.boxSize + 2 * this.boxPadding
+                        node.size.x = node.size.y = this.meSize
                         const newFrameMe = sprite.spriteFrame.clone()
                         newFrameMe.setTexture(this.textureMe)
                         sprite.spriteFrame = newFrameMe
+                        node.type = 'player'
                         this.meNode = node
                         break
                     case PLAYER_OLD:
-                        node.height = this.meSize * this.boxSize + 2 * this.boxPadding
-                        node.width = this.meSize * this.boxSize + 2 * this.boxPadding
+                        node.size.x = node.size.y = this.meSize
                         const newFrameOld = sprite.spriteFrame.clone()
                         newFrameOld.setTexture(this.textureOld)
                         sprite.spriteFrame = newFrameOld
+                        node.type = 'player'
                         this.meNode = node
                         break
                     case PLAYER_BABY:
                         const newFrameBaby = sprite.spriteFrame.clone()
                         newFrameBaby.setTexture(this.textureBaby)
                         sprite.spriteFrame = newFrameBaby
+                        node.type = 'player'
                         this.meNode = node
                         break
                     case SHE:
-                        node.height = 2 * this.boxSize + 2 * this.boxPadding
-                        node.width = 2 * this.boxSize + 2 * this.boxPadding
+                        node.size.x = node.size.y = 2
                         const newFrameShe = sprite.spriteFrame.clone()
                         newFrameShe.setTexture(this.textureShe)
                         sprite.spriteFrame = newFrameShe
+                        node.type = 'she'
                         break
                     default: break
                     }
+                    node.height = node.size.y * this.boxSize + (node.size.y - 1) * this.boxPadding * 2
+                    node.width = node.size.x * this.boxSize + (node.size.x - 1) * this.boxPadding * 2
                     this.node.addChild(node)
 
                     break
@@ -233,121 +226,230 @@ cc.Class({
         }
     },
 
-    updateChildrenState (child) {
-        // judge if it can go to
-        child.left = child.right = child.up = child.down = true
-
-        // between other bricks
-        for (const item of this.node.children) {
-            if (child !== item) {
-                // update states
-                if (child.x + child.width + this.boxPadding * 2 >= item.x - this.boxPadding / 2 &&
-                    child.x + child.width + this.boxPadding * 2 <= item.x + this.boxPadding / 2 &&
-                    child.y >= item.y - item.height && child.y <= item.y + child.height) {
-                    // brick right
-                    child.right = false
-                }
-                if (child.x - this.boxPadding * 2 - item.width <= item.x + this.boxPadding / 2 &&
-                    child.x - this.boxPadding * 2 - item.width >= item.x - this.boxPadding / 2 &&
-                    child.y >= item.y - item.height && child.y <= item.y + child.height) {
-                    // brick left
-                    child.left = false
-                }
-                if (child.y - this.boxPadding * 2 - child.width <= item.y + this.boxPadding / 2 &&
-                    child.y - this.boxPadding * 2 - child.width >= item.y - this.boxPadding / 2 &&
-                    child.x >= item.x - child.width && child.x <= item.x + item.width) {
-                    // brick down
-                    child.down = false
-                }
-                if (child.y + this.boxPadding * 2 + item.width >= item.y - this.boxPadding / 2 &&
-                    child.y + this.boxPadding * 2 + item.width <= item.y + this.boxPadding / 2 &&
-                    child.x >= item.x - child.width && child.x <= item.x + item.width) {
-                    // brick up
-                    child.up = false
-                }
-
-                // when in other bricks
-                if (child.x + child.width + this.boxPadding * 2 >= item.x &&
-                    child.x + child.width + this.boxPadding * 2 <= item.x + this.boxSize / 2 &&
-                    child.y >= item.y - item.height && child.y <= item.y + child.height) {
-                    child.x = item.x - child.width - this.boxPadding * 2
-                    child.right = false
-                }
-                if (child.x - this.boxPadding * 2 >= item.x + item.width - this.boxSize / 2 &&
-                    child.x - this.boxPadding * 2 <= item.x + item.width &&
-                    child.y >= item.y - item.height && child.y <= item.y + child.height) {
-                    child.x = item.x + item.width + this.boxPadding * 2
-                    child.left = false
-                }
-                if (child.y - this.boxPadding * 2 - child.width <= item.y &&
-                    child.y - this.boxPadding * 2 - child.width >= item.y - this.boxSize / 2 &&
-                    child.x >= item.x - child.width && child.x <= item.x + item.width) {
-                    child.y = item.y + this.boxPadding * 2 + child.height
-                    child.down = false
-                }
-                if (child.y + this.boxPadding * 2 >= item.y - item.height &&
-                    child.y + this.boxPadding * 2 <= item.y - item.height + this.boxSize / 2 &&
-                    child.x >= item.x - child.width && child.x <= item.x + item.width) {
-                    child.y = item.y - item.height - this.boxPadding * 2
-                    child.up = false
+    handleTouch () {
+        switch (this.touchTarget) {
+        case undefined:
+        case null:
+        {
+            const newTouchPoint = this.touchPos
+            const pos = this.node.convertToNodeSpace(newTouchPoint)
+            for (const child of this.node.children) {
+                if (child.markType === SHE) continue
+                if (this.positionInNode(child, pos)) {
+                    this.touchTarget = child
+                    this.latestTouchPoint = newTouchPoint
+                    this.ignoreGrids = true
+                    this.removeMarkOnMap(child)
+                    break
                 }
             }
+            break
         }
-        // between panel
-        if (child.x - this.boxPadding - this.borderWidth <= 0) {
-            // wall left
-            child.left = false
-        }
-        if (child.x + this.boxPadding + child.width + this.borderWidth >= this.node.width) {
-            // wall right
-            child.right = false
-        }
-        if (child.y - this.boxPadding - child.width - this.borderWidth <= 0) {
-            // wall down
-            child.down = false
-        }
-        if (child.y + this.boxPadding + this.borderWidth >= this.node.height) {
-            // wall up
-            child.up = false
-        }
+        default:
+            this.moveNode()
 
-        // when out of panel
-        if (child.x - this.boxPadding - this.borderWidth < 0) {
-            child.x = this.borderWidth + this.boxPadding
-            child.left = false
-        } else if (child.x + child.width + this.boxPadding + this.borderWidth > this.node.width) {
-            child.x = this.node.width - this.borderWidth - this.boxPadding - child.width
-            child.right = false
-        }
-
-        if (child.y - this.boxPadding - this.borderWidth - child.height < 0) {
-            child.y = this.borderWidth + this.boxPadding + child.height
-            child.down = false
-        } else if (child.y + this.boxPadding + this.borderWidth > this.node.height) {
-            child.y = this.node.height - this.borderWidth - this.boxPadding
-            child.up = false
+            break
         }
     },
 
-    updateChildrenStillPosition (child) {
-        child.x = this.initx +
-                  Math.floor((Math.floor((child.x - this.initx) / (this.boxSizeWithPadding / 2)) + 1) / 2) * this.boxSizeWithPadding
-        child.y = this.inity +
-                  Math.floor((Math.floor((child.y - this.inity) / (this.boxSizeWithPadding / 2)) + 1) / 2) * this.boxSizeWithPadding
+    cancelTouch () {
+        if (this.touchTarget) {
+            const node = this.touchTarget
+            this.touchTarget = null
+            const grid = this.nearestGrid(node.position.x, node.position.y)
+            node.logicPos.x = this.colToX(grid.x)
+            node.logicPos.y = this.rowToY(grid.y)
+            node.position = node.logicPos
+            node.row = grid.y
+            node.col = grid.x
+            this.markOnMap(node)
+            this.checkGravityMoves()
+        }
     },
 
-    updateChildrenMovingPosition (child) {
-        var dirx = child.x - this.initx
-        var diry = child.y - this.inity
-        var rx = dirx % this.boxSizeWithPadding
-        var ry = diry % this.boxSizeWithPadding
-        if ((rx > this.boxSizeWithPadding / 3 || rx < this.boxSizeWithPadding * 2 / 3) ||
-            ry > this.boxSizeWithPadding / 3 || ry < this.boxSizeWithPadding * 2 / 3) {
-            if (rx <= 20 || rx >= this.boxSizeWithPadding - 20) {
-                child.x = this.initx + Math.round(dirx / this.boxSizeWithPadding) * this.boxSizeWithPadding
+    moveNode () {
+        const newTouchPoint = this.touchPos
+        const delta = newTouchPoint.sub(this.latestTouchPoint)
+        this.latestTouchPoint = newTouchPoint
+
+        // try to find legal place to move
+        const oldPos = this.touchTarget.logicPos
+        const legalPos = this.normalizedPos(this.touchTarget, delta, oldPos)
+        if (legalPos.x < 0) {
+            cc.log(legalPos)
+        }
+        const gridState = this.matchGrid(legalPos, this.attract_dist)
+        this.touchTarget.x = gridState[0]
+        this.touchTarget.y = gridState[1]
+        this.touchTarget.logicPos = legalPos
+
+        // check for gravity moves
+        if (gridState[2]) {
+            if (!this.ignoreGrids) {
+                const grid = this.nearestGrid(legalPos.x, legalPos.y)
+                this.touchTarget.col = grid.x
+                this.touchTarget.row = grid.y
+                this.markOnMap(this.touchTarget)
+                this.checkGravityMoves()
+                this.removeMarkOnMap(this.touchTarget)
             }
-            if (ry <= 20 || ry >= this.boxSizeWithPadding - 20) {
-                child.y = this.inity + Math.round(diry / this.boxSizeWithPadding) * this.boxSizeWithPadding
+            this.ignoreGrids = true
+        } else {
+            this.ignoreGrids = false
+        }
+    },
+
+    checkGravityMoves () {
+        let loop = true
+        while (loop) {
+            loop = false
+            for (const node of this.node.children) {
+                if (node.markType === SHE || node === this.touchTarget) continue
+                let hasSpace = false
+
+                let r = node.row + node.size.y
+                if (r < this.height) {
+                    hasSpace = true
+                    for (let c = node.col; c < node.col + node.size.x; c++) {
+                        if (this.map[r * this.width + c] > 0) {
+                            hasSpace = false
+                            break
+                        }
+                    }
+                }
+
+                if (hasSpace) {
+                    this.removeMarkOnMap(node)
+                    r = node.row
+                    node.row = r + 1
+                    node.rowDrop += 1
+                    const y = this.rowToY(node.row)
+                    node.logicPos.y = y
+                    node.logicPos.x = node.x
+                    node.needGravityAnimation = true
+                    this.markOnMap(node)
+                    loop = true
+                }
+            }
+        }
+
+        // for (const node of this.node.children) {
+        //     if (node.needGravityAnimation) {
+        //         cc.log(node.markType, node.rowDrop)
+        //         node.runAction(cc.moveTo(0.1 * node.rowDrop, node.logicPos))
+        //         node.needGravityAnimation = false
+        //         node.rowDrop = 0
+        //     }
+        // }
+
+        // this.generateAnimation(node)
+    },
+
+    generateAnimation (node) {
+        var animation = {
+            node: node,
+            ax: 0.4,
+            ay: 0.4,
+            vx: 0,
+            vy: 0,
+            curX: node.x,
+            curY: node.y,
+            endX: node.logicPos.x,
+            endY: node.logicPos.y
+        }
+        this.animations.push(animation)
+    },
+
+    positionInNode (child, position) {
+        return position.x >= child.logicPos.x && position.x <= child.logicPos.x + child.width &&
+                position.y <= child.logicPos.y && position.y >= child.logicPos.y - child.height
+    },
+
+    matchGrid (position, dist) {
+        const grid = this.nearestGrid(position.x, position.y)
+        const c = grid.x
+        const r = grid.y
+        if (Math.abs(this.colToX(c) - position.x) < dist && Math.abs(this.rowToY(r) - position.y) < dist) {
+            return [this.colToX(c), this.rowToY(r), true]
+        } else {
+            return [position.x, position.y, false]
+        }
+    },
+
+    normalizedPos (node, delta, oldPos) {
+        var x = delta.x + oldPos.x
+        var y = delta.y + oldPos.y
+        if (!this.isGridEmpty(node, x, y)) {
+            const grid = this.nearestGrid(oldPos.x, oldPos.y)
+            const c = grid.x
+            const r = grid.y
+            if (Math.abs(delta.x) > Math.abs(delta.y)) {
+                if (this.isGridEmpty(node, x, this.rowToY(r))) {
+                    y = this.rowToY(r)
+                } else if (this.isGridEmpty(node, this.colToX(c), y)) {
+                    x = this.colToX(c)
+                } else {
+                    x = this.colToX(c)
+                    y = this.rowToY(r)
+                }
+            } else {
+                if (this.isGridEmpty(node, this.colToX(c), y)) {
+                    x = this.colToX(c)
+                } else if (this.isGridEmpty(node, x, this.rowToY(r))) {
+                    y = this.rowToY(r)
+                } else {
+                    x = this.colToX(c)
+                    y = this.rowToY(r)
+                }
+            }
+        }
+
+        return cc.v2(x, y)
+    },
+
+    // returns (col, row)
+    nearestGrid (x, y) {
+        // this (x, y) is measured from left-bottom cornor, while the grid is measured from left-top cornor
+        let c = Math.round(this.xToCol(x))
+        if (c < 0) c = 0
+        if (c >= this.width) c = this.width
+        let r = Math.round(this.yToRow(y))
+        if (r < 0) r = 0
+        if (r >= this.height) r = this.height
+        return cc.v2(c, r)
+    },
+
+    isGridEmpty (node, x, y) {
+        const cMin = Math.floor(this.xToCol(x) + 1e-4)
+        const cMax = Math.ceil(this.xToCol(x) - 1e-4) + node.size.x
+        const rMin = Math.floor(this.yToRow(y) + 1e-4)
+        const rMax = Math.ceil(this.yToRow(y) - 1e-4) + node.size.y
+        if (cMin < 0 || cMax > this.width || rMin < 0 || rMax > this.height) {
+            return false
+        }
+        for (let r = rMin; r < rMax; r++) {
+            for (let c = cMin; c < cMax; c++) {
+                if (this.map[r * this.width + c] !== 0) {
+                    return false
+                }
+            }
+        }
+        return true
+    },
+
+    markOnMap (node) {
+        for (let r = node.row; r < node.row + node.size.y; r++) {
+            for (let c = node.col; c < node.col + node.size.x; c++) {
+                this.map[r * this.width + c] = 1
+            }
+        }
+        this.map[node.row * this.width + node.col] = node.markType
+    },
+
+    removeMarkOnMap (child) {
+        for (let r = child.row; r < child.row + child.size.y; r++) {
+            for (let c = child.col; c < child.col + child.size.x; c++) {
+                this.map[r * this.width + c] = 0
             }
         }
     },
@@ -375,47 +477,24 @@ cc.Class({
         this.drawBorderAndFill()
         this.addBoxes()
 
-        cc.log(this.exitPosition, this.meNode.position)
+        cc.log(this.boxSize)
 
-        for (const child of this.node.children) {
-            // add event of touch_move
-            child.on(cc.Node.EventType.TOUCH_MOVE, function (event) {
-                child.holding = true
-                var delta = event.touch.getDelta()
-                if ((delta.x > 0 && child.right) || (delta.x < 0 && child.left)) {
-                    if (child.x + delta.x - this.boxPadding - this.borderWidth <= 0) {
-                        child.x = this.initx
-                        child.left = false
-                    } else if (child.x + delta.x + child.width + this.boxPadding + this.borderWidth >= WIDTH) {
-                        child.x = this.endx - this.boxSize + child.width
-                        child.right = false
-                    } else {
-                        child.x += delta.x
-                    }
-                }
-                if ((delta.y > 0 && child.up) || (delta.y < 0 && child.down)) {
-                    if (child.y + delta.y - this.boxPadding - this.borderWidth <= 0) {
-                        child.y = this.inity - this.boxSize + child.height
-                        child.down = false
-                    } else if (child.y + delta.y + this.boxPadding + this.borderWidth >= HEIGHT) {
-                        child.y = this.endy
-                        child.up = false
-                    } else {
-                        child.y += delta.y
-                    }
-                }
-            }, this.node)
+        this.animations = []
 
-            // add event of touch_cancel
-            child.on(cc.Node.EventType.TOUCH_CANCEL, function (event) {
-                child.holding = false
-            }, this.node)
-
-            // add event of touch_end
-            child.on(cc.Node.EventType.TOUCH_END, function (event) {
-                child.holding = false
-            }, this.node)
-        }
+        this.node.on(cc.Node.EventType.TOUCH_START, function (touchEvent) {
+            this.touching = true
+            this.touchPos = touchEvent.touch.getLocation()
+        }.bind(this))
+        this.node.on(cc.Node.EventType.TOUCH_MOVE, function (touchEvent) {
+            this.touching = true
+            this.touchPos = touchEvent.touch.getLocation()
+        }.bind(this))
+        this.node.on(cc.Node.EventType.TOUCH_CANCEL, function () {
+            this.touching = false
+        }.bind(this))
+        this.node.on(cc.Node.EventType.TOUCH_END, function () {
+            this.touching = false
+        }.bind(this))
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -428,20 +507,38 @@ cc.Class({
     },
 
     update (dt) {
-        for (const child of this.node.children) {
-            this.updateChildrenState(child)
-
-            child.dropping = false
-
-            if (child.holding) {
-                // this.updateChildrenMovingPosition(child)
-            } else if (child.down) {
-                child.dropping = true
-                child.y -= this.droppingSpeed
-            } else {
-                this.updateChildrenStillPosition(child)
+        if (this.touching) {
+            this.handleTouch()
+        } else {
+            this.cancelTouch()
+        }
+        for (const node of this.node.children) {
+            if (node.needGravityAnimation) {
+                if (node.y - this.droppingSpeed <= node.logicPos.y) {
+                    node.y = node.logicPos.y
+                    node.needGravityAnimation = false
+                } else {
+                    node.y -= this.droppingSpeed
+                }
             }
         }
-        if (!this.checkComplete) this.checkGameEnd()
+    },
+
+    // these are just for convinience
+    colToX (col) {
+        return this.borderWidth + this.boxSizeWithPadding * col + this.boxPadding
+    },
+
+    rowToY (row) {
+        return this.node.height - (this.borderWidth + this.boxSizeWithPadding * row + this.boxPadding)
+    },
+
+    // float (need to use Math.round or Math.floor ... to convert to a integer)
+    yToRow (y) {
+        return (this.node.height - y - this.borderWidth - this.boxPadding) / this.boxSizeWithPadding
+    },
+
+    xToCol (x) {
+        return (x - this.borderWidth - this.boxPadding) / this.boxSizeWithPadding
     }
 })
