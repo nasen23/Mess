@@ -5,8 +5,6 @@ const PLAYER = 9
 const PLAYER_BABY = 10
 const PLAYER_OLD = 11
 const SHE = 8
-const EMPTY = 0
-const OCCUPIED = 1
 const BOX_1 = 2
 const BOX_2_H = 3
 const BOX_2_V = 4
@@ -140,6 +138,8 @@ cc.Class({
                 const state = this.map[row * this.width + col]
                 switch (state) {
                 case PLAYER:
+                case PLAYER_BABY:
+                case PLAYER_OLD:
                 case SHE:
                 case BOX_1:
                 case BOX_2_H:
@@ -154,6 +154,8 @@ cc.Class({
 
                     const node = cc.instantiate(this.boxPrefab)
                     node.setPosition(x, y)
+
+                    node.state = state
                     node.width = node.height = this.boxSize
                     node.color = this.boxColor
                     const sprite = node.getComponent(cc.Sprite)
@@ -225,6 +227,126 @@ cc.Class({
             }
         }
     },
+
+    /* updateChildrenState (child) {
+        // judge if it can go to
+        child.left = child.right = child.up = child.down = true
+
+        // between other bricks
+        for (const item of this.node.children) {
+            if (child !== item) {
+                // update states
+                if (child.x + child.width + this.boxPadding * 2 >= item.x - this.boxPadding / 2 &&
+                    child.x + child.width + this.boxPadding * 2 <= item.x + this.boxPadding / 2 &&
+                    child.y >= item.y - item.height && child.y <= item.y + child.height) {
+                    // brick right
+                    child.right = false
+                }
+                if (child.x - this.boxPadding * 2 - item.width <= item.x + this.boxPadding / 2 &&
+                    child.x - this.boxPadding * 2 - item.width >= item.x - this.boxPadding / 2 &&
+                    child.y >= item.y - item.height && child.y <= item.y + child.height) {
+                    // brick left
+                    child.left = false
+                }
+                if (child.y - this.boxPadding * 2 - child.height <= item.y + this.boxPadding / 2 &&
+                    child.y - this.boxPadding * 2 - child.height >= item.y - this.boxPadding / 2 &&
+                    child.x >= item.x - child.width && child.x <= item.x + item.width) {
+                    // brick down
+                    child.down = false
+                }
+                if (child.y + this.boxPadding * 2 + item.height >= item.y - this.boxPadding / 2 &&
+                    child.y + this.boxPadding * 2 + item.height <= item.y + this.boxPadding / 2 &&
+                    child.x >= item.x - child.width && child.x <= item.x + item.width) {
+                    // brick up
+                    child.up = false
+                }
+
+                // when in other bricks
+                if (child.x + child.width + this.boxPadding * 2 >= item.x &&
+                    child.x + child.width + this.boxPadding * 2 <= item.x + this.boxSize / 2 &&
+                    child.y >= item.y - item.height && child.y <= item.y + child.height) {
+                    child.x = item.x - child.width - this.boxPadding * 2
+                    child.right = false
+                }
+                if (child.x - this.boxPadding * 2 >= item.x + item.width - this.boxSize / 2 &&
+                    child.x - this.boxPadding * 2 <= item.x + item.width &&
+                    child.y >= item.y - item.height && child.y <= item.y + child.height) {
+                    child.x = item.x + item.width + this.boxPadding * 2
+                    child.left = false
+                }
+                if (child.y - this.boxPadding * 2 - child.height <= item.y &&
+                    child.y - this.boxPadding * 2 - child.height >= item.y - this.boxSize / 2 &&
+                    child.x >= item.x - child.width && child.x <= item.x + item.width) {
+                    child.y = item.y + this.boxPadding * 2 + child.height
+                    child.down = false
+                }
+                if (child.y + this.boxPadding * 2 >= item.y - item.height &&
+                    child.y + this.boxPadding * 2 <= item.y - item.height + this.boxSize / 2 &&
+                    child.x >= item.x - child.width && child.x <= item.x + item.width) {
+                    child.y = item.y - item.height - this.boxPadding * 2
+                    child.up = false
+                }
+            }
+        }
+        // between panel
+        if (child.x - this.boxPadding - this.borderWidth <= 0) {
+            // wall left
+            child.left = false
+        }
+        if (child.x + this.boxPadding + child.width + this.borderWidth >= this.node.width) {
+            // wall right
+            child.right = false
+        }
+        if (child.y - this.boxPadding - child.height - this.borderWidth <= 0) {
+            // wall down
+            child.down = false
+        }
+        if (child.y + this.boxPadding + this.borderWidth >= this.node.height) {
+            // wall up
+            child.up = false
+        }
+
+        // when out of panel
+        if (child.x - this.boxPadding - this.borderWidth < 0) {
+            child.x = this.borderWidth + this.boxPadding
+            child.left = false
+        } else if (child.x + child.width + this.boxPadding + this.borderWidth > this.node.width) {
+            child.x = this.node.width - this.borderWidth - this.boxPadding - child.width
+            child.right = false
+        }
+
+        if (child.y - this.boxPadding - this.borderWidth - child.height < 0) {
+            child.y = this.borderWidth + this.boxPadding + child.height
+            child.down = false
+        } else if (child.y + this.boxPadding + this.borderWidth > this.node.height) {
+            child.y = this.node.height - this.borderWidth - this.boxPadding
+            child.up = false
+        }
+    },
+
+    updateChildrenStillPosition (child) {
+        child.x = this.initx +
+                  Math.floor((Math.floor((child.x - this.initx) / (this.boxSizeWithPadding / 2)) + 1) / 2) * this.boxSizeWithPadding
+        child.y = this.inity +
+                  Math.floor((Math.floor((child.y - this.inity) / (this.boxSizeWithPadding / 2)) + 1) / 2) * this.boxSizeWithPadding
+    },
+
+    updateChildrenMovingPosition (child) {
+        var dirx = child.x - this.initx
+        var diry = child.y - this.inity
+        var rx = dirx % this.boxSizeWithPadding
+        var ry = diry % this.boxSizeWithPadding
+        if ((rx > this.boxSizeWithPadding / 3 || rx < this.boxSizeWithPadding * 2 / 3) ||
+            ry > this.boxSizeWithPadding / 3 || ry < this.boxSizeWithPadding * 2 / 3) {
+            if (rx <= 20 || rx >= this.boxSizeWithPadding - 20) {
+                child.x = this.initx + Math.round(dirx / this.boxSizeWithPadding) * this.boxSizeWithPadding
+            }
+            if (ry <= 20 || ry >= this.boxSizeWithPadding - 20) {
+                child.y = this.inity + Math.round(diry / this.boxSizeWithPadding) * this.boxSizeWithPadding
+            }
+        }
+    },
+    */
 
     handleTouch () {
         switch (this.touchTarget) {
@@ -468,7 +590,6 @@ cc.Class({
 
             // wait for animations to complete
             cc.director.loadScene('game')
-            cc.log('try to go to next scene')
         }
     },
 
