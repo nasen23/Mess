@@ -7,7 +7,7 @@ cc.Class({
 
     // LIFE-CYCLE CALLBACKS:
 
-    toMenu: function () {
+    toChoiceMenu: function () {
         cc.director.loadScene('choiceMenu')
     }
 

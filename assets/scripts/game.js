@@ -5,16 +5,12 @@ const PLAYER = 9
 const PLAYER_BABY = 10
 const PLAYER_OLD = 11
 const SHE = 8
-const EMPTY = 0
-const OCCUPIED = 1
 const BOX_1 = 2
 const BOX_2_H = 3
 const BOX_2_V = 4
 const BOX_4 = 5
 const BOX_3_H = 6
 const BOX_3_V = 7
-
-const SPEED = 12 // 手指松开后方块下落速度
 
 var WIDTH = 0
 var HEIGHT = 0
@@ -148,6 +144,8 @@ cc.Class({
                 const state = this.map[row * this.width + col]
                 switch (state) {
                 case PLAYER:
+                case PLAYER_BABY:
+                case PLAYER_OLD:
                 case SHE:
                 case BOX_1:
                 case BOX_2_H:
@@ -162,6 +160,8 @@ cc.Class({
 
                     const node = cc.instantiate(this.boxPrefab)
                     node.setPosition(x, y)
+
+                    node.state = state
                     node.width = node.height = this.boxSize
                     node.color = this.boxColor
                     const sprite = node.getComponent(cc.Sprite)
@@ -188,10 +188,10 @@ cc.Class({
                         node.width = 2 * this.boxSize + 2 * this.boxPadding
                         break
                     case BOX_3_H:
-                        node.width = 3 * this.boxSize
+                        node.width = 3 * this.boxSize + 4 * this.boxPadding
                         break
                     case BOX_3_V:
-                        node.height = 3 * this.boxSize
+                        node.height = 3 * this.boxSize + 4 * this.boxPadding
                         break
                     case PLAYER:
                         node.height = this.meSize * this.boxSize + 2 * this.boxPadding
@@ -233,7 +233,7 @@ cc.Class({
         }
     },
 
-    updateChildrenState (child) {
+    /*updateChildrenState (child) {
         // judge if it can go to
         child.left = child.right = child.up = child.down = true
 
@@ -253,14 +253,14 @@ cc.Class({
                     // brick left
                     child.left = false
                 }
-                if (child.y - this.boxPadding * 2 - child.width <= item.y + this.boxPadding / 2 &&
-                    child.y - this.boxPadding * 2 - child.width >= item.y - this.boxPadding / 2 &&
+                if (child.y - this.boxPadding * 2 - child.height <= item.y + this.boxPadding / 2 &&
+                    child.y - this.boxPadding * 2 - child.height >= item.y - this.boxPadding / 2 &&
                     child.x >= item.x - child.width && child.x <= item.x + item.width) {
                     // brick down
                     child.down = false
                 }
-                if (child.y + this.boxPadding * 2 + item.width >= item.y - this.boxPadding / 2 &&
-                    child.y + this.boxPadding * 2 + item.width <= item.y + this.boxPadding / 2 &&
+                if (child.y + this.boxPadding * 2 + item.height >= item.y - this.boxPadding / 2 &&
+                    child.y + this.boxPadding * 2 + item.height <= item.y + this.boxPadding / 2 &&
                     child.x >= item.x - child.width && child.x <= item.x + item.width) {
                     // brick up
                     child.up = false
@@ -279,8 +279,8 @@ cc.Class({
                     child.x = item.x + item.width + this.boxPadding * 2
                     child.left = false
                 }
-                if (child.y - this.boxPadding * 2 - child.width <= item.y &&
-                    child.y - this.boxPadding * 2 - child.width >= item.y - this.boxSize / 2 &&
+                if (child.y - this.boxPadding * 2 - child.height <= item.y &&
+                    child.y - this.boxPadding * 2 - child.height >= item.y - this.boxSize / 2 &&
                     child.x >= item.x - child.width && child.x <= item.x + item.width) {
                     child.y = item.y + this.boxPadding * 2 + child.height
                     child.down = false
@@ -302,7 +302,7 @@ cc.Class({
             // wall right
             child.right = false
         }
-        if (child.y - this.boxPadding - child.width - this.borderWidth <= 0) {
+        if (child.y - this.boxPadding - child.height - this.borderWidth <= 0) {
             // wall down
             child.down = false
         }
@@ -351,6 +351,126 @@ cc.Class({
             }
         }
     },
+    */
+
+   handleTouch () {
+    switch (this.touchTarget) {
+    case undefined:
+    case null:
+    {
+        const newTouchPoint = this.touchPos
+        const pos = this.node.convertToNodeSpace(newTouchPoint)
+        for (const child of this.node.children) {
+            if (child.markType === SHE) continue
+            if (this.positionInNode(child, pos)) {
+                this.touchTarget = child
+                this.latestTouchPoint = newTouchPoint
+                this.ignoreGrids = true
+                this.removeMarkOnMap(child)
+                break
+            }
+        }
+        break
+    }
+    default:
+        this.moveNode()
+
+        break
+    }
+},
+
+cancelTouch () {
+    if (this.touchTarget) {
+        const node = this.touchTarget
+        this.touchTarget = null
+        const grid = this.nearestGrid(node.position.x, node.position.y)
+        node.logicPos.x = this.colToX(grid.x)
+        node.logicPos.y = this.rowToY(grid.y)
+        node.position = node.logicPos
+        node.row = grid.y
+        node.col = grid.x
+        this.markOnMap(node)
+        this.checkGravityMoves()
+    }
+},
+
+moveNode () {
+    const newTouchPoint = this.touchPos
+    const delta = newTouchPoint.sub(this.latestTouchPoint)
+    this.latestTouchPoint = newTouchPoint
+
+    // try to find legal place to move
+    const oldPos = this.touchTarget.logicPos
+    const legalPos = this.normalizedPos(this.touchTarget, delta, oldPos)
+    if (legalPos.x < 0) {
+        cc.log(legalPos)
+    }
+    const gridState = this.matchGrid(legalPos, this.attract_dist)
+    this.touchTarget.x = gridState[0]
+    this.touchTarget.y = gridState[1]
+    this.touchTarget.logicPos = legalPos
+
+    // check for gravity moves
+    if (gridState[2]) {
+        if (!this.ignoreGrids) {
+            const grid = this.nearestGrid(legalPos.x, legalPos.y)
+            this.touchTarget.col = grid.x
+            this.touchTarget.row = grid.y
+            this.markOnMap(this.touchTarget)
+            this.checkGravityMoves()
+            this.removeMarkOnMap(this.touchTarget)
+        }
+        this.ignoreGrids = true
+    } else {
+        this.ignoreGrids = false
+    }
+},
+
+checkGravityMoves () {
+    let loop = true
+    while (loop) {
+        loop = false
+        for (const node of this.node.children) {
+            if (node.markType === SHE || node === this.touchTarget) continue
+            let hasSpace = false
+
+            let r = node.row + node.size.y
+            if (r < this.height) {
+                hasSpace = true
+                for (let c = node.col; c < node.col + node.size.x; c++) {
+                    if (this.map[r * this.width + c] > 0) {
+                        hasSpace = false
+                        break
+                    }
+                }
+            }
+
+            if (hasSpace) {
+                this.removeMarkOnMap(node)
+                r = node.row
+                node.row = r + 1
+                node.rowDrop += 1
+                const y = this.rowToY(node.row)
+                node.logicPos.y = y
+                node.logicPos.x = node.x
+                node.needGravityAnimation = true
+                this.markOnMap(node)
+                loop = true
+            }
+        }
+    }
+
+    // for (const node of this.node.children) {
+    //     if (node.needGravityAnimation) {
+    //         cc.log(node.markType, node.rowDrop)
+    //         node.runAction(cc.moveTo(0.1 * node.rowDrop, node.logicPos))
+    //         node.needGravityAnimation = false
+    //         node.rowDrop = 0
+    //     }
+    // }
+
+    // this.generateAnimation(node)
+},
 
     checkGameEnd () {
         if (this.meNode.x === this.exitPosition.x && this.meNode.y === this.exitPosition.y) {
@@ -366,7 +486,6 @@ cc.Class({
 
             // wait for animations to complete
             cc.director.loadScene('game')
-            cc.log('try to go to next scene')
         }
     },
 
@@ -382,26 +501,45 @@ cc.Class({
             child.on(cc.Node.EventType.TOUCH_MOVE, function (event) {
                 child.holding = true
                 var delta = event.touch.getDelta()
-                if ((delta.x > 0 && child.right) || (delta.x < 0 && child.left)) {
-                    if (child.x + delta.x - this.boxPadding - this.borderWidth <= 0) {
-                        child.x = this.initx
-                        child.left = false
-                    } else if (child.x + delta.x + child.width + this.boxPadding + this.borderWidth >= WIDTH) {
-                        child.x = this.endx - this.boxSize + child.width
-                        child.right = false
-                    } else {
-                        child.x += delta.x
+                if (child.state === SHE) {
+                    //SHE donn't move
+                }
+                else if (child.state === PLAYER_OLD) {
+                    //OLD only moves to left and right
+                    if ((delta.x > 0 && child.right) || (delta.x < 0 && child.left)) {
+                        if (child.x + delta.x - this.boxPadding - this.borderWidth <= 0) {
+                            child.x = this.initx
+                            child.left = false
+                        } else if (child.x + delta.x + child.width + this.boxPadding + this.borderWidth >= WIDTH) {
+                            child.x = this.endx - this.boxSize + child.width
+                            child.right = false
+                        } else {
+                            child.x += delta.x
+                        }
                     }
                 }
-                if ((delta.y > 0 && child.up) || (delta.y < 0 && child.down)) {
-                    if (child.y + delta.y - this.boxPadding - this.borderWidth <= 0) {
-                        child.y = this.inity - this.boxSize + child.height
-                        child.down = false
-                    } else if (child.y + delta.y + this.boxPadding + this.borderWidth >= HEIGHT) {
-                        child.y = this.endy
-                        child.up = false
-                    } else {
-                        child.y += delta.y
+                else {
+                    if ((delta.x > 0 && child.right) || (delta.x < 0 && child.left)) {
+                        if (child.x + delta.x - this.boxPadding - this.borderWidth <= 0) {
+                            child.x = this.initx
+                            child.left = false
+                        } else if (child.x + delta.x + child.width + this.boxPadding + this.borderWidth >= WIDTH) {
+                            child.x = this.endx - this.boxSize + child.width
+                            child.right = false
+                        } else {
+                            child.x += delta.x
+                        }
+                    }
+                    if ((delta.y > 0 && child.up) || (delta.y < 0 && child.down)) {
+                        if (child.y + delta.y - this.boxPadding - this.borderWidth <= 0) {
+                            child.y = this.inity - this.boxSize + child.height
+                            child.down = false
+                        } else if (child.y + delta.y + this.boxPadding + this.borderWidth >= HEIGHT) {
+                            child.y = this.endy
+                            child.up = false
+                        } else {
+                            child.y += delta.y
+                        }
                     }
                 }
             }, this.node)
@@ -431,12 +569,9 @@ cc.Class({
         for (const child of this.node.children) {
             this.updateChildrenState(child)
 
-            child.dropping = false
-
             if (child.holding) {
                 // this.updateChildrenMovingPosition(child)
             } else if (child.down) {
-                child.dropping = true
                 child.y -= this.droppingSpeed
             } else {
                 this.updateChildrenStillPosition(child)
