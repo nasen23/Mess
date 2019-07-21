@@ -52,11 +52,13 @@ cc.Class({
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
-
+        const fadeIn = cc.fadeIn(1)
+        this.node.runAction(fadeIn)
     },
 
-    start () {
-
+    onDestroy () {
+        const fadeOut = cc.fadeOut(1)
+        this.node.runAction(fadeOut)
     }
 
     // update (dt) {},
