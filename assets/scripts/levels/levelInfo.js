@@ -65,7 +65,7 @@ const levels = {
     5: {
         audio: 0,
         words: 'day',
-        width: 5,
+        width: 4,
         height: 5,
         exit: cc.v2(2, 2),
         exitDirection: 'right',
@@ -491,7 +491,7 @@ const levels = {
         words: 'day',
         width: 5,
         height: 3,
-        exut: cc.v2(3, 1),
+        exit: cc.v2(3, 1),
         exitDirection: 'right',
         map: [
             0, 0, 0, 0, 0,
@@ -505,7 +505,7 @@ const levels = {
         words: 'day',
         width: 5,
         height: 3,
-        exut: cc.v2(3, 1),
+        exit: cc.v2(3, 1),
         exitDirection: 'right',
         map: [
             0, 0, 0, 0, 0,
@@ -519,7 +519,7 @@ const levels = {
         words: 'day',
         width: 5,
         height: 4,
-        exut: cc.v2(3, 2),
+        exit: cc.v2(3, 2),
         exitDirection: 'right',
         map: [
             0, 0, 0, 0, 0,
@@ -534,7 +534,7 @@ const levels = {
         words: 'day',
         width: 5,
         height: 5,
-        exut: cc.v2(3, 3),
+        exit: cc.v2(3, 3),
         exitDirection: 'right',
         map: [
             0, 0, 0, 0, 0,
@@ -550,7 +550,7 @@ const levels = {
         words: 'day',
         width: 6,
         height: 6,
-        exut: cc.v2(4, 4),
+        exit: cc.v2(4, 4),
         exitDirection: 'right',
         map: [
             0, 0, 0, 0, 0, 0,
@@ -567,7 +567,7 @@ const levels = {
         words: 'day',
         width: 6,
         height: 6,
-        exut: cc.v2(4, 4),
+        exit: cc.v2(4, 4),
         exitDirection: 'right',
         map: [
             5, 1, 0, 0, 0, 0,
@@ -584,7 +584,7 @@ const levels = {
         words: 'day',
         width: 6,
         height: 6,
-        exut: cc.v2(4, 4),
+        exit: cc.v2(4, 4),
         exitDirection: 'right',
         map: [
             0, 0, 3, 1, 0, 0,
@@ -601,7 +601,7 @@ const levels = {
         words: 'day',
         width: 6,
         height: 6,
-        exut: cc.v2(4, 4),
+        exit: cc.v2(4, 4),
         exitDirection: 'right',
         map: [
             0, 0, 0, 3, 1, 0,
@@ -618,7 +618,7 @@ const levels = {
         words: 'day',
         width: 6,
         height: 4,
-        exut: cc.v2(4, 2),
+        exit: cc.v2(4, 2),
         exitDirection: 'right',
         map: [
             0, 0, 0, 0, 0, 0,
@@ -633,7 +633,7 @@ const levels = {
         words: 'day',
         width: 4,
         height: 4,
-        exut: cc.v2(2, 2),
+        exit: cc.v2(2, 2),
         exitDirection: 'right',
         map: [
             0, 0, 0, 0,

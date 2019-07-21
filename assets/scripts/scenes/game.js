@@ -113,7 +113,8 @@ cc.Class({
         this.words = levelData.words
         this.exit = levelData.exit
         this.exitDirection = levelData.exitDirection
-        this.map = levelData.map
+        // clone the map to avoid changing levelData itself
+        this.map = levelData.map.slice()
 
         this.meSize = levelData.meSize
         // calculating exit position (coordinate of top left cornor of player)
@@ -642,6 +643,9 @@ cc.Class({
                     node.y -= this.droppingSpeed
                 }
             }
+        }
+        if (!this.touching) {
+            this.checkGameEnd()
         }
     },
 

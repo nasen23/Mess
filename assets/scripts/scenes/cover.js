@@ -29,17 +29,17 @@ cc.Class({
         // },
     },
 
+    play () {
+        cc.director.loadScene('choiceMenu')
+    },
+
     // LIFE-CYCLE CALLBACKS:
 
     // onLoad () {},
 
     start () {
-    
-    },
 
-    toStartMenu: function () {
-        cc.director.loadScene('startMenu')
     }
 
     // update (dt) {},
-});
+})
