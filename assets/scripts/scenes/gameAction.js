@@ -31,14 +31,23 @@ cc.Class({
         // },
     },
 
+    clearGraphicsThing () {
+        const panel = this.node.getChildByName('panel')
+        const graphics = panel.getComponent(cc.Graphics)
+        graphics.clear()
+    },
+
     backToChapterMenu () {
         // also reset level data
         global.level = 1
-        cc.director.loadScene('choiceMenu')
+        window.sceneAnimator.switchToScene('choiceMenu', 0.5, { opacity: { from: 255, to: 0 } },
+            0.5, { opacity: { from: 0, to: 255 } })
+        this.clearGraphicsThing()
     },
 
     restart () {
-        cc.director.loadScene('game')
+        window.sceneAnimator.switchToScene('game', 1, { opacity: { from: 255, to: 0 } },
+            1, { opacity: { from: 0, to: 255 } })
     },
 
     setProperHeightForPanel () {
@@ -52,13 +61,7 @@ cc.Class({
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
-        const fadeIn = cc.fadeIn(1)
-        this.node.runAction(fadeIn)
-    },
 
-    onDestroy () {
-        const fadeOut = cc.fadeOut(1)
-        this.node.runAction(fadeOut)
     }
 
     // update (dt) {},

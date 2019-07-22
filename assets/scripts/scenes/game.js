@@ -72,20 +72,33 @@ cc.Class({
 
         graphics.moveTo(halfWidth, halfWidth)
         graphics.lineTo(this.node.width - halfWidth, halfWidth)
-        // draw out right exit
-        if (this.exitDirection === 'right') {
-            graphics.lineTo(this.node.width - halfWidth, this.exitPosition.y + this.boxPadding - this.boxSizeWithPadding * this.meSize)
-            graphics.moveTo(this.node.width - halfWidth, this.exitPosition.y + this.boxPadding)
-        }
         graphics.lineTo(this.node.width - halfWidth, this.node.height - halfWidth)
         graphics.lineTo(halfWidth, this.node.height - halfWidth)
-        // draw out left exit
-        if (this.exitDirection === 'left') {
-            graphics.lineTo(halfWidth, this.exitPosition.y + this.boxPadding)
-            graphics.moveTo(halfWidth, this.exitPosition.y + this.boxPadding - this.boxSizeWithPadding * this.meSize)
-        }
-        graphics.lineTo(halfWidth, 0)
+        graphics.close()
         graphics.stroke()
+
+        graphics.fillColor = this.fillColor
+        graphics.fill()
+
+        // draw exit
+        graphics.strokeColor = graphics.fillColor
+        const leftTopY = this.exitPosition.y + this.boxPadding
+        const leftBottomY = leftTopY - this.meSize * this.boxSizeWithPadding
+        if (this.exitDirection === 'left') {
+            graphics.moveTo(halfWidth, leftTopY)
+            graphics.lineTo(halfWidth, leftBottomY)
+            graphics.stroke()
+        } else if (this.exitDirection === 'right') {
+            graphics.moveTo(this.node.width - halfWidth, leftTopY)
+            graphics.lineTo(this.node.width - halfWidth, leftBottomY)
+            graphics.stroke()
+        }
+    },
+
+    setWords () {
+        let canvas = this.node.parent
+        let label = canvas.getChildByName('words')
+        label.string = this.words
     },
 
     // calculating width and other basic datas
@@ -100,14 +113,6 @@ cc.Class({
         this.boxSize = this.boxSizeWithPadding - 2 * this.boxPadding
         // calculating node width
         this.node.width = this.width * this.boxSizeWithPadding + 2 * this.borderWidth
-
-        // the position of the first cell in panel
-        this.initx = this.borderWidth + this.boxPadding
-        this.inity = this.initx + this.boxSize
-
-        // the position of the final cell in panel
-        // this.endx = this.node.width - this.inity
-        // this.endy = this.node.height - this.initx
 
         this.audio = levelData.audio
         this.words = levelData.words
@@ -192,6 +197,7 @@ cc.Class({
                         newFrameMe.setTexture(this.textureMe)
                         sprite.spriteFrame = newFrameMe
                         node.type = 'player'
+                        node.color = cc.Color.WHITE
                         this.meNode = node
                         break
                     case PLAYER_OLD:
@@ -200,6 +206,7 @@ cc.Class({
                         newFrameOld.setTexture(this.textureOld)
                         sprite.spriteFrame = newFrameOld
                         node.type = 'player'
+                        node.color = cc.Color.WHITE
                         this.meNode = node
                         break
                     case PLAYER_BABY:
@@ -207,6 +214,7 @@ cc.Class({
                         newFrameBaby.setTexture(this.textureBaby)
                         sprite.spriteFrame = newFrameBaby
                         node.type = 'player'
+                        node.color = cc.Color.WHITE
                         this.meNode = node
                         break
                     case SHE:
@@ -215,6 +223,7 @@ cc.Class({
                         newFrameShe.setTexture(this.textureShe)
                         sprite.spriteFrame = newFrameShe
                         node.type = 'she'
+                        node.Color = cc.Color.WHITE
                         break
                     default: break
                     }
@@ -578,19 +587,18 @@ cc.Class({
     },
 
     checkGameEnd () {
-        if (this.meNode.x === this.exitPosition.x && this.meNode.y === this.exitPosition.y) {
+        if (this.meNode.x === this.exitPosition.x && this.meNode.y === this.exitPosition.y && !this.checkComplete) {
             this.checkComplete = true
             global.level++
-            var move = cc.moveBy(
-                this.duration,
-                cc.v2(this.boxSize * this.meSize + 2 * this.boxPadding + 20, 0)
-            ).easing(cc.easeCubicActionInOut())
-            var fade = cc.fadeOut(this.duration)
-            this.meNode.runAction(move)
-            this.node.runAction(fade)
+            cc.director.preloadScene('game')
 
-            // wait for animations to complete
-            cc.director.loadScene('game')
+            // move object and fade out
+            cc.tween(this.meNode).by(0.5, {
+                x: this.boxSizeWithPadding * this.meSize + this.borderWidth,
+                opacity: -255
+            }).parallel(cc.tween(this.node).to(0.5, { opacity: 0 })).call(function () {
+                cc.director.loadScene('game')
+            }).start()
         }
     },
 
@@ -598,10 +606,7 @@ cc.Class({
         this.init(levels.loadLevelData(global.level))
         this.drawBorderAndFill()
         this.addBoxes()
-
-        cc.log(this.boxSize)
-
-        this.animations = []
+        this.setWords()
 
         this.node.on(cc.Node.EventType.TOUCH_START, function (touchEvent) {
             this.touching = true
@@ -622,6 +627,9 @@ cc.Class({
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
+        this.node.opacity = 0
+        cc.tween(this.node).to(0.5, { opacity: 255 }).start()
+
         this.reload()
     },
 
@@ -629,24 +637,24 @@ cc.Class({
     },
 
     update (dt) {
-        if (this.touching) {
-            this.handleTouch()
-        } else {
-            this.cancelTouch()
-        }
-        for (const node of this.node.children) {
-            if (node.needGravityAnimation) {
-                if (node.y - this.droppingSpeed <= node.logicPos.y) {
-                    node.y = node.logicPos.y
-                    node.needGravityAnimation = false
-                } else {
-                    node.y -= this.droppingSpeed
+        if (!this.checkComplete) {
+            if (this.touching) {
+                this.handleTouch()
+            } else {
+                this.cancelTouch()
+            }
+            for (const node of this.node.children) {
+                if (node.needGravityAnimation) {
+                    if (node.y - this.droppingSpeed <= node.logicPos.y) {
+                        node.y = node.logicPos.y
+                        node.needGravityAnimation = false
+                    } else {
+                        node.y -= this.droppingSpeed
+                    }
                 }
             }
         }
-        if (!this.touching) {
-            this.checkGameEnd()
-        }
+        this.checkGameEnd()
     },
 
     // these are just for convinience
