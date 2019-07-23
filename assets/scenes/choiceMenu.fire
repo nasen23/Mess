@@ -41,8 +41,8 @@
     },
     "_scale": {
       "__type__": "cc.Vec3",
-      "x": 0.3328125,
-      "y": 0.3328125,
+      "x": 0.3890625,
+      "y": 0.3890625,
       "z": 1
     },
     "_quat": {
@@ -676,7 +676,7 @@
     "component": "",
     "_componentId": "2be3fZjpexEZoCm89ssFSFk",
     "handler": "toLevel",
-    "customEventData": " 41"
+    "customEventData": "1"
   },
   {
     "__type__": "cc.Node",
@@ -2169,6 +2169,6 @@
       "__id__": 2
     },
     "_enabled": true,
-    "_id": "31IwsTE+ZNmr2Zx0mwVWX3"
+    "_id": "7bS4OBBc5E85AScG8YbGq9"
   }
 ]
