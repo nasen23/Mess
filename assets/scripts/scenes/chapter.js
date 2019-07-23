@@ -31,7 +31,7 @@ cc.Class({
         // },
     },
 
-    toLevel (event, level) {
+    toLevel (_event, level) {
         global.level = Number(level)
         window.sceneAnimator.switchToScene('game', 0.5, { opacity: { from: 255, to: 0 } }, 0.5, { opacity: { from: 0, to: 255 } })
     },

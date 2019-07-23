@@ -16,7 +16,7 @@ const levels = {
     },
     2: {
         audio: 0,
-        words: 'But sometimes I needed to move some objects',
+        words: 'But sometimes I needed to move some objects.',
         width: 4,
         height: 5,
         exit: cc.v2(2, 3),
@@ -48,7 +48,7 @@ const levels = {
     },
     4: {
         audio: 0,
-        words: 'It was getting disordered.',
+        words: 'Sometimes I had to get out from the window.',
         width: 4,
         height: 5,
         exit: cc.v2(2, 0),
@@ -64,7 +64,7 @@ const levels = {
     },
     5: {
         audio: 0,
-        words: 'Sometimes I had to get out from the window.',
+        words: 'My room was getting disordered.',
         width: 4,
         height: 5,
         exit: cc.v2(2, 2),
@@ -80,7 +80,7 @@ const levels = {
     },
     6: {
         audio: 0,
-        words: 'I never used to clean my room.',
+        words: 'I didn\'t clean my room very often',
         width: 5,
         height: 5,
         exit: cc.v2(3, 0),
@@ -112,7 +112,7 @@ const levels = {
     },
     8: {
         audio: 0,
-        words: 'But difficult to get rid of',
+        words: 'But difficult to get rid of.',
         width: 5,
         height: 5,
         exit: cc.v2(3, 0),
@@ -548,7 +548,7 @@ const levels = {
     },
     35: {
         audio: 0,
-        words: 'Our son alse moves to big city.',
+        words: 'Our son also moves to big city.',
         width: 6,
         height: 6,
         exit: cc.v2(4, 4),
@@ -631,7 +631,7 @@ const levels = {
     },
     40: {
         audio: 0,
-        words: 'Just like what I like at the beginning.',
+        words: 'Just like what I was like at the beginning.',
         width: 4,
         height: 4,
         exit: cc.v2(2, 2),
