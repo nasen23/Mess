@@ -30,7 +30,7 @@ cc.Class({
     },
 
     play () {
-        cc.director.loadScene('choiceMenu')
+        window.sceneAnimator.switchToScene('choiceMenu', 0.5, { opacity: { from: 255, to: 0 } }, 0.5, { opacity: { from: 0, to: 255 } })
     },
 
     // LIFE-CYCLE CALLBACKS:

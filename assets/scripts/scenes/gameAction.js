@@ -51,7 +51,7 @@ cc.Class({
     },
 
     setProperHeightForPanel () {
-
+        
     },
 
     resetButtonPosition () {

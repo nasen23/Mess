@@ -96,8 +96,8 @@ cc.Class({
     },
 
     setWords () {
-        let canvas = this.node.parent
-        let label = canvas.getChildByName('words')
+        const canvas = this.node.parent
+        const label = canvas.getChildByName('words')
         label.string = this.words
     },
 
@@ -207,6 +207,7 @@ cc.Class({
                         sprite.spriteFrame = newFrameOld
                         node.type = 'player'
                         node.color = cc.Color.WHITE
+                        node.cannotGoUp = true
                         this.meNode = node
                         break
                     case PLAYER_BABY:
@@ -536,6 +537,9 @@ cc.Class({
             }
         }
 
+        if (node.cannotGoUp) {
+            y = oldPos.y
+        }
         return cc.v2(x, y)
     },
 

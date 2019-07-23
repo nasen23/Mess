@@ -33,11 +33,11 @@ cc.Class({
 
     toLevel (event, level) {
         global.level = Number(level)
-        cc.director.loadScene('game')
+        window.sceneAnimator.switchToScene('game', 0.5, { opacity: { from: 255, to: 0 } }, 0.5, { opacity: { from: 0, to: 255 } })
     },
 
     backToCover () {
-        cc.director.loadScene('startMenu')
+        window.sceneAnimator.switchToScene('startMenu', 0.5, { opacity: { from: 255, to: 0 } }, 0.5, { opacity: { from: 0, to: 255 } })
     },
 
     // LIFE-CYCLE CALLBACKS:
