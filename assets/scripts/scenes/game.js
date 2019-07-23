@@ -81,23 +81,26 @@ cc.Class({
         graphics.fill()
 
         // draw exit
-        graphics.strokeColor = graphics.fillColor
-        const leftTopY = this.exitPosition.y + this.boxPadding
-        const leftBottomY = leftTopY - this.meSize * this.boxSizeWithPadding
-        if (this.exitDirection === 'left') {
-            graphics.moveTo(halfWidth, leftTopY)
-            graphics.lineTo(halfWidth, leftBottomY)
-            graphics.stroke()
-        } else if (this.exitDirection === 'right') {
-            graphics.moveTo(this.node.width - halfWidth, leftTopY)
-            graphics.lineTo(this.node.width - halfWidth, leftBottomY)
-            graphics.stroke()
+        if (!this.stopAllActivities) {
+            graphics.strokeColor = graphics.fillColor
+            const leftTopY = this.exitPosition.y + this.boxPadding
+            const leftBottomY = leftTopY - this.meSize * this.boxSizeWithPadding
+            if (this.exitDirection === 'left') {
+                graphics.moveTo(halfWidth, leftTopY)
+                graphics.lineTo(halfWidth, leftBottomY)
+                graphics.stroke()
+            } else if (this.exitDirection === 'right') {
+                graphics.moveTo(this.node.width - halfWidth, leftTopY)
+                graphics.lineTo(this.node.width - halfWidth, leftBottomY)
+                graphics.stroke()
+            }
         }
     },
 
     setWords () {
         const canvas = this.node.parent
-        const label = canvas.getChildByName('words')
+        const words = canvas.getChildByName('words')
+        const label = words.getComponent(cc.Label)
         label.string = this.words
     },
 
@@ -133,8 +136,8 @@ cc.Class({
                 this.borderWidth + this.boxPadding,
                 this.node.height - (this.borderWidth + this.boxSizeWithPadding * this.exit.y + this.boxPadding)
             )
-        } else {
-            cc.error('unknown exit direction')
+        } else if (global.level === 41) {
+            this.stopAllActivities = true
         }
     },
 
@@ -606,26 +609,28 @@ cc.Class({
         }
     },
 
-    reload () {
+    load () {
         this.init(levels.loadLevelData(global.level))
         this.drawBorderAndFill()
         this.addBoxes()
         this.setWords()
 
-        this.node.on(cc.Node.EventType.TOUCH_START, function (touchEvent) {
-            this.touching = true
-            this.touchPos = touchEvent.touch.getLocation()
-        }.bind(this))
-        this.node.on(cc.Node.EventType.TOUCH_MOVE, function (touchEvent) {
-            this.touching = true
-            this.touchPos = touchEvent.touch.getLocation()
-        }.bind(this))
-        this.node.on(cc.Node.EventType.TOUCH_CANCEL, function () {
-            this.touching = false
-        }.bind(this))
-        this.node.on(cc.Node.EventType.TOUCH_END, function () {
-            this.touching = false
-        }.bind(this))
+        if (!this.stopAllActivities) {
+            this.node.on(cc.Node.EventType.TOUCH_START, function (touchEvent) {
+                this.touching = true
+                this.touchPos = touchEvent.touch.getLocation()
+            }.bind(this))
+            this.node.on(cc.Node.EventType.TOUCH_MOVE, function (touchEvent) {
+                this.touching = true
+                this.touchPos = touchEvent.touch.getLocation()
+            }.bind(this))
+            this.node.on(cc.Node.EventType.TOUCH_CANCEL, function () {
+                this.touching = false
+            }.bind(this))
+            this.node.on(cc.Node.EventType.TOUCH_END, function () {
+                this.touching = false
+            }.bind(this))
+        }
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -634,31 +639,38 @@ cc.Class({
         this.node.opacity = 0
         cc.tween(this.node).to(0.5, { opacity: 255 }).start()
 
-        this.reload()
+        this.load()
+        if (this.stopAllActivities) {
+            const canvas = this.node.parent
+            const restart = canvas.getChildByName('restart')
+            canvas.removeChild(restart)
+        }
     },
 
     start () {
     },
 
     update (dt) {
-        if (!this.checkComplete) {
-            if (this.touching) {
-                this.handleTouch()
-            } else {
-                this.cancelTouch()
-            }
-            for (const node of this.node.children) {
-                if (node.needGravityAnimation) {
-                    if (node.y - this.droppingSpeed <= node.logicPos.y) {
-                        node.y = node.logicPos.y
-                        node.needGravityAnimation = false
-                    } else {
-                        node.y -= this.droppingSpeed
+        if (!this.stopAllActivities) {
+            if (!this.checkComplete) {
+                if (this.touching) {
+                    this.handleTouch()
+                } else {
+                    this.cancelTouch()
+                }
+                for (const node of this.node.children) {
+                    if (node.needGravityAnimation) {
+                        if (node.y - this.droppingSpeed <= node.logicPos.y) {
+                            node.y = node.logicPos.y
+                            node.needGravityAnimation = false
+                        } else {
+                            node.y -= this.droppingSpeed
+                        }
                     }
                 }
             }
+            this.checkGameEnd()
         }
-        this.checkGameEnd()
     },
 
     // these are just for convinience
