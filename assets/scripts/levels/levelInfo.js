@@ -1,7 +1,7 @@
 const levels = {
     1: {
         audio: 0,
-        words: 'day',
+        words: 'Every morning I left my room for work.',
         width: 4,
         height: 4,
         exit: cc.v2(2, 2),
@@ -16,7 +16,7 @@ const levels = {
     },
     2: {
         audio: 0,
-        words: 'day',
+        words: 'But sometimes I needed to move some objects',
         width: 4,
         height: 5,
         exit: cc.v2(2, 3),
@@ -32,7 +32,7 @@ const levels = {
     },
     3: {
         audio: 0,
-        words: 'day',
+        words: 'Because my room was really in a mess.',
         width: 4,
         height: 5,
         exit: cc.v2(2, 3),
@@ -48,7 +48,7 @@ const levels = {
     },
     4: {
         audio: 0,
-        words: 'day',
+        words: 'It was getting disordered.',
         width: 4,
         height: 5,
         exit: cc.v2(2, 0),
@@ -64,7 +64,7 @@ const levels = {
     },
     5: {
         audio: 0,
-        words: 'day',
+        words: 'Sometimes I had to get out from the window.',
         width: 4,
         height: 5,
         exit: cc.v2(2, 2),
@@ -80,7 +80,7 @@ const levels = {
     },
     6: {
         audio: 0,
-        words: 'day',
+        words: 'I never used to clean my room.',
         width: 5,
         height: 5,
         exit: cc.v2(3, 0),
@@ -96,7 +96,7 @@ const levels = {
     },
     7: {
         audio: 0,
-        words: 'day',
+        words: 'I knew it was a bad habit.',
         width: 5,
         height: 5,
         exit: cc.v2(3, 0),
@@ -112,7 +112,7 @@ const levels = {
     },
     8: {
         audio: 0,
-        words: 'day',
+        words: 'But difficult to get rid of',
         width: 5,
         height: 5,
         exit: cc.v2(3, 0),
@@ -128,7 +128,7 @@ const levels = {
     },
     9: {
         audio: 0,
-        words: 'day',
+        words: 'It was a disaster.',
         width: 6,
         height: 6,
         exit: cc.v2(4, 4),
@@ -145,7 +145,7 @@ const levels = {
     },
     10: {
         audio: 0,
-        words: 'day',
+        words: 'I hoped it would be different someday...',
         width: 6,
         height: 6,
         exit: cc.v2(4, 4),
@@ -162,7 +162,7 @@ const levels = {
     },
     11: {
         audio: 0,
-        words: 'day',
+        words: 'That day she came.',
         width: 6,
         height: 4,
         exit: cc.v2(4, 2),
@@ -177,7 +177,7 @@ const levels = {
     },
     12: {
         audio: 0,
-        words: 'day',
+        words: 'Our room seemed a little larger.',
         width: 6,
         height: 6,
         exit: cc.v2(4, 4),
@@ -194,7 +194,7 @@ const levels = {
     },
     13: {
         audio: 0,
-        words: 'day',
+        words: 'I thought she would like cleanning the room.',
         width: 6,
         height: 6,
         exit: cc.v2(4, 4),
@@ -211,7 +211,7 @@ const levels = {
     },
     14: {
         audio: 0,
-        words: 'day',
+        words: 'But she was lazy and did not move at all.',
         width: 6,
         height: 6,
         exit: cc.v2(4, 4),
@@ -228,7 +228,7 @@ const levels = {
     },
     15: {
         audio: 0,
-        words: 'day',
+        words: 'Actually she prefered shopping.',
         width: 6,
         height: 6,
         exit: cc.v2(4, 4),
@@ -245,7 +245,7 @@ const levels = {
     },
     16: {
         audio: 0,
-        words: 'day',
+        words: 'And bought a lot',
         width: 6,
         height: 6,
         exit: cc.v2(4, 4),
@@ -262,7 +262,7 @@ const levels = {
     },
     17: {
         audio: 0,
-        words: 'day',
+        words: 'We filled up the room with objects and our love.',
         width: 6,
         height: 6,
         exit: cc.v2(4, 4),
@@ -279,7 +279,7 @@ const levels = {
     },
     18: {
         audio: 0,
-        words: 'day',
+        words: 'But heading out to work seemed more difficult.',
         width: 6,
         height: 6,
         exit: cc.v2(4, 2),
@@ -296,7 +296,7 @@ const levels = {
     },
     19: {
         audio: 0,
-        words: 'day',
+        words: 'It was still a disaster.',
         width: 7,
         height: 7,
         exit: cc.v2(5, 5),
@@ -314,7 +314,7 @@ const levels = {
     },
     20: {
         audio: 0,
-        words: 'day',
+        words: 'I hoped it would be different someday...',
         width: 7,
         height: 7,
         exit: cc.v2(5, 5),
@@ -332,7 +332,7 @@ const levels = {
     },
     21: {
         audio: 0,
-        words: 'day',
+        words: 'One day we had our baby.',
         width: 4,
         height: 3,
         exit: cc.v2(3, 2),
@@ -346,7 +346,7 @@ const levels = {
     },
     22: {
         audio: 0,
-        words: 'day',
+        words: 'But his small room was also in a mess.',
         width: 4,
         height: 3,
         exit: cc.v2(3, 2),
@@ -360,7 +360,7 @@ const levels = {
     },
     23: {
         audio: 0,
-        words: 'day',
+        words: 'His mom and I tried to teach him how to clean.',
         width: 5,
         height: 3,
         exit: cc.v2(4, 2),
@@ -374,7 +374,7 @@ const levels = {
     },
     24: {
         audio: 0,
-        words: 'day',
+        words: 'And many other things.',
         width: 6,
         height: 4,
         exit: cc.v2(5, 3),
@@ -389,7 +389,7 @@ const levels = {
     },
     25: {
         audio: 0,
-        words: 'day',
+        words: 'We taught him try to succeed up.',
         width: 6,
         height: 5,
         exit: cc.v2(5, 0),
@@ -405,7 +405,7 @@ const levels = {
     },
     26: {
         audio: 0,
-        words: 'day',
+        words: 'And be fronted with failure down.',
         width: 6,
         height: 5,
         exit: cc.v2(5, 4),
@@ -421,7 +421,7 @@ const levels = {
     },
     27: {
         audio: 0,
-        words: 'day',
+        words: 'And taught him overcome all obstacles.',
         width: 6,
         height: 5,
         exit: cc.v2(5, 4),
@@ -437,7 +437,7 @@ const levels = {
     },
     28: {
         audio: 0,
-        words: 'day',
+        words: 'In the big and complex world.',
         width: 7,
         height: 6,
         exit: cc.v2(6, 5),
@@ -454,7 +454,7 @@ const levels = {
     },
     29: {
         audio: 0,
-        words: 'day',
+        words: 'We wished he would never lose himself.',
         width: 7,
         height: 7,
         exit: cc.v2(6, 6),
@@ -472,12 +472,13 @@ const levels = {
     },
     30: {
         audio: 0,
-        words: 'day',
+        words: 'But finally he still can not learn how to clean his room.',
         width: 6,
         height: 6,
         exit: cc.v2(5, 5),
         exitDirection: 'right',
         map: [
+            0, 0, 0, 0, 0, 0,
             0, 4, 2, 0, 0, 0,
             0, 1, 7, 6, 1, 1,
             5, 1, 1, 3, 1, 2,
@@ -488,7 +489,7 @@ const levels = {
     },
     31: {
         audio: 0,
-        words: 'day',
+        words: 'Many years later, I am old.',
         width: 5,
         height: 3,
         exit: cc.v2(3, 1),
@@ -502,7 +503,7 @@ const levels = {
     },
     32: {
         audio: 0,
-        words: 'day',
+        words: 'Even this small object is a little difficult for me.',
         width: 5,
         height: 3,
         exit: cc.v2(3, 1),
@@ -516,7 +517,7 @@ const levels = {
     },
     33: {
         audio: 0,
-        words: 'day',
+        words: 'I can not jump.',
         width: 5,
         height: 4,
         exit: cc.v2(3, 2),
@@ -531,7 +532,7 @@ const levels = {
     },
     34: {
         audio: 0,
-        words: 'day',
+        words: 'And she is not here anymore.',
         width: 5,
         height: 5,
         exit: cc.v2(3, 3),
@@ -547,7 +548,7 @@ const levels = {
     },
     35: {
         audio: 0,
-        words: 'day',
+        words: 'Our son alse moves to big city.',
         width: 6,
         height: 6,
         exit: cc.v2(4, 4),
@@ -558,13 +559,13 @@ const levels = {
             3, 1, 0, 1, 2, 0,
             0, 2, 0, 3, 1, 0,
             11, 1, 5, 1, 0, 0,
-            1, 1, 1, 1, 10, 2
+            1, 1, 1, 1, 2, 2
         ],
         meSize: 2
     },
     36: {
         audio: 0,
-        words: 'day',
+        words: 'But my heart is still filled up with their love.',
         width: 6,
         height: 6,
         exit: cc.v2(4, 4),
@@ -581,7 +582,7 @@ const levels = {
     },
     37: {
         audio: 0,
-        words: 'day',
+        words: 'I do not think about cleaning my room.',
         width: 6,
         height: 6,
         exit: cc.v2(4, 4),
@@ -598,7 +599,7 @@ const levels = {
     },
     38: {
         audio: 0,
-        words: 'day',
+        words: 'And I hope nothing ever changes.',
         width: 6,
         height: 6,
         exit: cc.v2(4, 4),
@@ -615,7 +616,7 @@ const levels = {
     },
     39: {
         audio: 0,
-        words: 'day',
+        words: 'Just like the day she came.',
         width: 6,
         height: 4,
         exit: cc.v2(4, 2),
@@ -630,7 +631,7 @@ const levels = {
     },
     40: {
         audio: 0,
-        words: 'day',
+        words: 'Just like what I like at the beginning.',
         width: 4,
         height: 4,
         exit: cc.v2(2, 2),
@@ -640,6 +641,30 @@ const levels = {
             0, 0, 0, 0,
             11, 1, 0, 0,
             1, 1, 0, 0,
+        ],
+        meSize: 2
+    },
+    41: {
+        audio: 0,
+        words: 'Thanks for playing.',
+        width: 17,
+        height: 13,
+        exit: cc.v2(0, 0),
+        exitDirection: 'null',
+        map: [
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 9, 1, 2, 2, 0, 3, 1, 0, 10,2, 0, 6, 1, 1, 4, 0,
+            0, 1, 1, 3, 1, 0, 5, 1, 6, 1, 1, 0, 5, 1, 2, 1, 0,
+            0, 0, 4, 2, 0, 0, 1, 1, 3, 1, 4, 0, 1, 1, 2, 0, 0,
+            0, 0, 1, 2, 0, 0, 4, 2, 0, 2, 1, 0, 4, 2, 5, 1, 0,
+            0, 0, 2, 2, 0, 0, 1, 2, 0, 2, 2, 0, 1, 2, 1, 1, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 5, 1, 2, 2, 0, 3, 1, 0, 0, 2, 0, 7, 3, 1, 0, 0,
+            0, 1, 1, 3, 1, 0, 11,1, 2, 0, 2, 0, 1, 2, 0, 7, 0,
+            0, 6, 1, 1, 0, 0, 1, 1, 6, 1, 1, 0, 1, 2, 0, 1, 0,
+            0, 6, 1, 1, 4, 0, 4, 2, 0, 2, 4, 0, 8, 1, 0, 1, 0,
+            0, 3, 1, 2, 1, 0, 1, 2, 0, 0, 1, 0, 1, 1, 2, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
         ],
         meSize: 2
     }

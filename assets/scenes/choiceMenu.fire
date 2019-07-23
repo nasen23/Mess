@@ -41,8 +41,8 @@
     },
     "_scale": {
       "__type__": "cc.Vec3",
-      "x": 0.3890625,
-      "y": 0.3890625,
+      "x": 0.3328125,
+      "y": 0.3328125,
       "z": 1
     },
     "_quat": {
@@ -676,7 +676,7 @@
     "component": "",
     "_componentId": "2be3fZjpexEZoCm89ssFSFk",
     "handler": "toLevel",
-    "customEventData": "1"
+    "customEventData": " 41"
   },
   {
     "__type__": "cc.Node",
