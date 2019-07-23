@@ -591,7 +591,7 @@ cc.Class({
     },
 
     checkGameEnd () {
-        if (this.meNode.x === this.exitPosition.x && this.meNode.y === this.exitPosition.y && !this.checkComplete) {
+        if (Math.abs(this.meNode.x - this.exitPosition.x) < 1 && Math.abs(this.meNode.y - this.exitPosition.y) < 1 && !this.checkComplete) {
             this.checkComplete = true
             global.level++
             cc.director.preloadScene('game')
