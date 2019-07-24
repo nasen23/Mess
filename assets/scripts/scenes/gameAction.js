@@ -43,6 +43,8 @@ cc.Class({
         window.sceneAnimator.switchToScene('choiceMenu', 0.5, { opacity: { from: 255, to: 0 } },
             0.5, { opacity: { from: 0, to: 255 } })
         this.clearGraphicsThing()
+        global.audio = 0
+        cc.audioEngine.stopAll()
     },
 
     restart () {

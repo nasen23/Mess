@@ -36,11 +36,11 @@ var SceneAnimator = cc.Class({
     },
 
     finishCurrentScene (duration, animations, ...args) {
-        let scene = cc.director.getScene()
-        let canvas = scene.getChildByName('Canvas')
+        const scene = cc.director.getScene()
+        const canvas = scene.getChildByName('Canvas')
 
-        let target = {}
-        for (let property in animations) {
+        const target = {}
+        for (const property in animations) {
             canvas[property] = animations[property].from
             target[property] = animations[property].to
         }
@@ -51,11 +51,11 @@ var SceneAnimator = cc.Class({
 
     startNextScene (sceneName, duration, animations) {
         cc.director.loadScene(sceneName, function () {
-            let scene = cc.director.getScene()
-            let canvas = scene.getChildByName('Canvas')
+            const scene = cc.director.getScene()
+            const canvas = scene.getChildByName('Canvas')
 
-            let target = {}
-            for (let property in animations) {
+            const target = {}
+            for (const property in animations) {
                 canvas[property] = animations[property].from
                 target[property] = animations[property].to
             }

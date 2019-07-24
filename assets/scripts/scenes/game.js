@@ -141,6 +141,21 @@ cc.Class({
         }
     },
 
+    playAudio () {
+        if (this.audio === 0) {
+            cc.audioEngine.stopAll()
+        } else {
+            if (global.audio !== this.audio) {
+                cc.audioEngine.stopAll()
+                global.audio = this.audio
+                cc.loader.loadRes('/audio/' + this.audio + '.mp3', cc.AudioClip, (err, clip) => {
+                    if (err) cc.error(err)
+                    cc.audioEngine.play(clip, true, 0.5)
+                })
+            }
+        }
+    },
+
     addBoxes () {
         for (let row = 0; row < this.height; row++) {
             for (let col = 0; col < this.width; col++) {
@@ -614,6 +629,7 @@ cc.Class({
         this.drawBorderAndFill()
         this.addBoxes()
         this.setWords()
+        this.playAudio()
 
         if (!this.stopAllActivities) {
             this.node.on(cc.Node.EventType.TOUCH_START, function (touchEvent) {

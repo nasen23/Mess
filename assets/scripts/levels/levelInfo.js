@@ -1,6 +1,6 @@
 const levels = {
     1: {
-        audio: 0,
+        audio: 1,
         words: 'Every morning I left my room for work.',
         width: 4,
         height: 4,
@@ -15,7 +15,7 @@ const levels = {
         meSize: 2
     },
     2: {
-        audio: 0,
+        audio: 1,
         words: 'But sometimes I needed to move some objects.',
         width: 4,
         height: 5,
@@ -31,7 +31,7 @@ const levels = {
         meSize: 2
     },
     3: {
-        audio: 0,
+        audio: 1,
         words: 'Because my room was really in a mess.',
         width: 4,
         height: 5,
@@ -47,7 +47,7 @@ const levels = {
         meSize: 2
     },
     4: {
-        audio: 0,
+        audio: 1,
         words: 'Sometimes I had to get out from the window.',
         width: 4,
         height: 5,
@@ -63,7 +63,7 @@ const levels = {
         meSize: 2
     },
     5: {
-        audio: 0,
+        audio: 1,
         words: 'My room was getting disordered.',
         width: 4,
         height: 5,
@@ -79,7 +79,7 @@ const levels = {
         meSize: 2
     },
     6: {
-        audio: 0,
+        audio: 1,
         words: 'I didn\'t clean my room very often',
         width: 5,
         height: 5,
@@ -95,7 +95,7 @@ const levels = {
         meSize: 2
     },
     7: {
-        audio: 0,
+        audio: 1,
         words: 'I knew it was a bad habit.',
         width: 5,
         height: 5,
@@ -111,7 +111,7 @@ const levels = {
         meSize: 2
     },
     8: {
-        audio: 0,
+        audio: 1,
         words: 'But difficult to get rid of.',
         width: 5,
         height: 5,
@@ -127,7 +127,7 @@ const levels = {
         meSize: 2
     },
     9: {
-        audio: 0,
+        audio: 1,
         words: 'It was a disaster.',
         width: 6,
         height: 6,
@@ -144,7 +144,7 @@ const levels = {
         meSize: 2
     },
     10: {
-        audio: 0,
+        audio: 1,
         words: 'I hoped it would be different someday...',
         width: 6,
         height: 6,
@@ -161,7 +161,7 @@ const levels = {
         meSize: 2
     },
     11: {
-        audio: 0,
+        audio: 2,
         words: 'That day she came.',
         width: 6,
         height: 4,
@@ -176,7 +176,7 @@ const levels = {
         meSize: 2
     },
     12: {
-        audio: 0,
+        audio: 2,
         words: 'Our room seemed a little larger.',
         width: 6,
         height: 6,
@@ -193,7 +193,7 @@ const levels = {
         meSize: 2
     },
     13: {
-        audio: 0,
+        audio: 2,
         words: 'I thought she would like cleanning the room.',
         width: 6,
         height: 6,
@@ -210,7 +210,7 @@ const levels = {
         meSize: 2
     },
     14: {
-        audio: 0,
+        audio: 2,
         words: 'But she was lazy and did not move at all.',
         width: 6,
         height: 6,
@@ -227,7 +227,7 @@ const levels = {
         meSize: 2
     },
     15: {
-        audio: 0,
+        audio: 2,
         words: 'Actually she prefered shopping.',
         width: 6,
         height: 6,
@@ -244,7 +244,7 @@ const levels = {
         meSize: 2
     },
     16: {
-        audio: 0,
+        audio: 2,
         words: 'And bought a lot',
         width: 6,
         height: 6,
@@ -261,7 +261,7 @@ const levels = {
         meSize: 2
     },
     17: {
-        audio: 0,
+        audio: 2,
         words: 'We filled up the room with objects and our love.',
         width: 6,
         height: 6,
@@ -278,7 +278,7 @@ const levels = {
         meSize: 2
     },
     18: {
-        audio: 0,
+        audio: 2,
         words: 'But heading out to work seemed more difficult.',
         width: 6,
         height: 6,
@@ -295,7 +295,7 @@ const levels = {
         meSize: 2
     },
     19: {
-        audio: 0,
+        audio: 2,
         words: 'It was still a disaster.',
         width: 7,
         height: 7,
@@ -313,7 +313,7 @@ const levels = {
         meSize: 2
     },
     20: {
-        audio: 0,
+        audio: 2,
         words: 'I hoped it would be different someday...',
         width: 7,
         height: 7,
@@ -331,7 +331,7 @@ const levels = {
         meSize: 2
     },
     21: {
-        audio: 0,
+        audio: 2,
         words: 'One day we had our baby.',
         width: 4,
         height: 3,
@@ -345,7 +345,7 @@ const levels = {
         meSize: 1
     },
     22: {
-        audio: 0,
+        audio: 2,
         words: 'But his small room was also in a mess.',
         width: 4,
         height: 3,
@@ -359,7 +359,7 @@ const levels = {
         meSize: 1
     },
     23: {
-        audio: 0,
+        audio: 2,
         words: 'His mom and I tried to teach him how to clean.',
         width: 5,
         height: 3,
@@ -373,7 +373,7 @@ const levels = {
         meSize: 1
     },
     24: {
-        audio: 0,
+        audio: 2,
         words: 'And many other things.',
         width: 6,
         height: 4,
@@ -388,7 +388,7 @@ const levels = {
         meSize: 1
     },
     25: {
-        audio: 0,
+        audio: 2,
         words: 'We taught him try to succeed up.',
         width: 6,
         height: 5,
@@ -404,7 +404,7 @@ const levels = {
         meSize: 1
     },
     26: {
-        audio: 0,
+        audio: 2,
         words: 'And be fronted with failure down.',
         width: 6,
         height: 5,
@@ -420,7 +420,7 @@ const levels = {
         meSize: 1
     },
     27: {
-        audio: 0,
+        audio: 2,
         words: 'And taught him overcome all obstacles.',
         width: 6,
         height: 5,
@@ -436,7 +436,7 @@ const levels = {
         meSize: 1
     },
     28: {
-        audio: 0,
+        audio: 2,
         words: 'In the big and complex world.',
         width: 7,
         height: 6,
@@ -453,7 +453,7 @@ const levels = {
         meSize: 1
     },
     29: {
-        audio: 0,
+        audio: 2,
         words: 'We wished he would never lose himself.',
         width: 7,
         height: 7,
@@ -471,7 +471,7 @@ const levels = {
         meSize: 1
     },
     30: {
-        audio: 0,
+        audio: 2,
         words: 'But finally he still can not learn how to clean his room.',
         width: 6,
         height: 6,
@@ -488,8 +488,8 @@ const levels = {
         meSize: 1
     },
     31: {
-        audio: 0,
-        words: 'Many years later, I am old.',
+        audio: 3,
+        words: 'Years later, I am old. Climbing up is really hard.',
         width: 5,
         height: 3,
         exit: cc.v2(3, 1),
@@ -502,7 +502,7 @@ const levels = {
         meSize: 2
     },
     32: {
-        audio: 0,
+        audio: 3,
         words: 'Even this small object is a little difficult for me.',
         width: 5,
         height: 3,
@@ -516,7 +516,7 @@ const levels = {
         meSize: 2
     },
     33: {
-        audio: 0,
+        audio: 3,
         words: 'I can not jump.',
         width: 5,
         height: 4,
@@ -531,7 +531,7 @@ const levels = {
         meSize: 2
     },
     34: {
-        audio: 0,
+        audio: 3,
         words: 'And she is not here anymore.',
         width: 5,
         height: 5,
@@ -547,7 +547,7 @@ const levels = {
         meSize: 2
     },
     35: {
-        audio: 0,
+        audio: 3,
         words: 'Our son also moves to big city.',
         width: 6,
         height: 6,
@@ -564,7 +564,7 @@ const levels = {
         meSize: 2
     },
     36: {
-        audio: 0,
+        audio: 3,
         words: 'But my heart is still filled up with their love.',
         width: 6,
         height: 6,
@@ -581,7 +581,7 @@ const levels = {
         meSize: 2
     },
     37: {
-        audio: 0,
+        audio: 3,
         words: 'I do not think about cleaning my room.',
         width: 6,
         height: 6,
@@ -598,7 +598,7 @@ const levels = {
         meSize: 2
     },
     38: {
-        audio: 0,
+        audio: 3,
         words: 'And I hope nothing ever changes.',
         width: 6,
         height: 6,
@@ -615,7 +615,7 @@ const levels = {
         meSize: 2
     },
     39: {
-        audio: 0,
+        audio: 3,
         words: 'Just like the day she came.',
         width: 6,
         height: 4,
@@ -630,7 +630,7 @@ const levels = {
         meSize: 2
     },
     40: {
-        audio: 0,
+        audio: 3,
         words: 'Just like what I was like at the beginning.',
         width: 4,
         height: 4,
@@ -645,7 +645,7 @@ const levels = {
         meSize: 2
     },
     41: {
-        audio: 0,
+        audio: 1,
         words: 'Thanks for playing.',
         width: 17,
         height: 13,
