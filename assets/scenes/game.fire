@@ -518,7 +518,7 @@
     },
     "_position": {
       "__type__": "cc.Vec3",
-      "x": 450,
+      "x": -450,
       "y": 290,
       "z": 0
     },
@@ -764,8 +764,8 @@
     "_enabled": true,
     "alignMode": 1,
     "_target": null,
-    "_alignFlags": 33,
-    "_left": 0,
+    "_alignFlags": 9,
+    "_left": 15,
     "_right": 15,
     "_top": 15,
     "_bottom": 0,
@@ -824,7 +824,7 @@
     },
     "_position": {
       "__type__": "cc.Vec3",
-      "x": 405,
+      "x": -405,
       "y": 290,
       "z": 0
     },
@@ -1070,8 +1070,8 @@
     "_enabled": true,
     "alignMode": 1,
     "_target": null,
-    "_alignFlags": 33,
-    "_left": 0,
+    "_alignFlags": 9,
+    "_left": 60,
     "_right": 60,
     "_top": 15,
     "_bottom": 0,
@@ -1117,7 +1117,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 63.15,
-      "height": 25
+      "height": 30
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -1162,7 +1162,7 @@
     "_string": "Label",
     "_N$string": "Label",
     "_fontSize": 25,
-    "_lineHeight": 25,
+    "_lineHeight": 30,
     "_enableWrapText": true,
     "_N$file": {
       "__uuid__": "83616428-2abb-436a-994c-15481a3ca0a0"

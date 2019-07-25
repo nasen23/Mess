@@ -1,5 +1,5 @@
-const global = require('./global')
-const levels = require('./levels/level')
+const global = require('../global')
+const levels = require('../levels/level')
 
 const PLAYER = 9
 const PLAYER_BABY = 10
@@ -150,7 +150,7 @@ cc.Class({
                 global.audio = this.audio
                 cc.loader.loadRes('/audio/' + this.audio + '.mp3', cc.AudioClip, (err, clip) => {
                     if (err) cc.error(err)
-                    cc.audioEngine.play(clip, true, 0.5)
+                    cc.audioEngine.play(clip, true, 1)
                 })
             }
         }
@@ -618,7 +618,7 @@ cc.Class({
             cc.tween(this.meNode).by(0.5, {
                 x: this.boxSizeWithPadding * this.meSize + this.borderWidth,
                 opacity: -255
-            }).parallel(cc.tween(this.node).to(0.5, { opacity: 0 })).call(function () {
+            }).call(function () {
                 cc.director.loadScene('game')
             }).start()
         }
