@@ -5,6 +5,8 @@
 - 杨松霖，2017013581，github账号：yangsl17
 - 那森，2017013574，github账号：nasen23
 
+项目github地址：https://github.com/nasen23/Mess
+
 ### 游戏开发背景
 
 ###### 游戏选题
