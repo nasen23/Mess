@@ -39,7 +39,8 @@ cc.Class({
 
     backToChapterMenu () {
         // also reset level data
-        global.level = 1
+        global.lastLevel = global.level
+        global.level = 0
         window.sceneAnimator.switchToScene('choiceMenu', 0.5, { opacity: { from: 255, to: 0 } },
             0.5, { opacity: { from: 0, to: 255 } })
         this.clearGraphicsThing()
@@ -53,7 +54,6 @@ cc.Class({
     },
 
     setProperHeightForPanel () {
-        
     },
 
     resetButtonPosition () {
@@ -63,7 +63,7 @@ cc.Class({
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
-
+        cc.log(cc.sys.localStorage.__proto__)
     }
 
     // update (dt) {},

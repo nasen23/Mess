@@ -40,9 +40,18 @@ cc.Class({
         window.sceneAnimator.switchToScene('startMenu', 0.5, { opacity: { from: 255, to: 0 } }, 0.5, { opacity: { from: 0, to: 255 } })
     },
 
+    continueLevel (event) {
+        this.toLevel(event, global.lastLevel)
+    },
+
     // LIFE-CYCLE CALLBACKS:
 
-    // onLoad () {},
+    onLoad () {
+        if (global.lastLevel === 0) {
+            const continueButton = this.node.getChildByName('continue')
+            this.node.removeChild(continueButton)
+        }
+    },
 
     start () {
 
